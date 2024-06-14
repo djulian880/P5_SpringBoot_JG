@@ -1,18 +1,16 @@
 package com.openclassrooms.P5_SpringBoot_JG.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Entity
 @Getter
 @Setter
 @NoArgsConstructor // <--- THIS is it
 public class Person {
 
-	private @Id Long id;
+	private Long id;
 	
 	private String firstName;
 	private String lastName;

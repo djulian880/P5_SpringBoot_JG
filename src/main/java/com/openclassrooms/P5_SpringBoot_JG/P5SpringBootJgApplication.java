@@ -72,16 +72,10 @@ public class P5SpringBootJgApplication implements CommandLineRunner {
 		
 		
 		
-		/*System.out.println(contenuNoeud);
-		frepo.firestations=ManageRepositoriesFromFile.readCollectionFromJSONString(contenuNoeud,new FireStation());
+		System.out.println(contenuNoeud);
+		//frepo.firestations=ManageRepositoriesFromFile.readCollectionFromJSONString(contenuNoeud,new FireStation());
 		
-		
-		ArrayList l=(ArrayList) frepo.firestations;
-		 System.out.println("Taille firestations:"+l.size());
-		 
-		 for(int i=0;i<l.size();i++) {
-				System.out.println(l.get(i).toString()+"\n");
-			}*/
+
 		System.out.println("firestations:");
 		for(int i=0;i<frepo.firestations.size();i++) {
 			System.out.println(frepo.firestations.get(i).address);

@@ -12,13 +12,13 @@ public class Person {
 
 	private Long id;
 	
-	private String firstName;
-	private String lastName;
-	private String address;
-	private String city;
-	private int zip;
-	private String phone;
-	private String email;
+	public String firstName;
+	public String lastName;
+	public String address;
+	public String city;
+	public int zip;
+	public String phone;
+	public String email;
 
 	public Person(String firstName, String lastName, String address, String city, int zip, String phone, String email) {
 		this.firstName = firstName;
@@ -28,6 +28,16 @@ public class Person {
 		this.zip = zip;
 		this.phone = phone;
 		this.email = email;
+	}
+	
+	public Person() {
+		this.firstName = "";
+		this.lastName = "";
+		this.address = "";
+		this.city = "";
+		this.zip = 0;
+		this.phone = "";
+		this.email = "";
 	}
 
 }

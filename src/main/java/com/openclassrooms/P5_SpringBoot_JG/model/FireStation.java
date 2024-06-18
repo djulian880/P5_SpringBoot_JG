@@ -10,16 +10,21 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor // <--- THIS is it
-public class Firestation {
+public class FireStation {
 
 	private Long id;
 
-	private String address;
-	private int station;
+	public String address;
+	public int station;
 
-	public Firestation(String address, int station) {
+	public FireStation(String address, int station) {
 		this.address = address;
 		this.station = station;
+
+	}
+	public FireStation() {
+		this.address = null;
+		this.station = -1;
 
 	}
 }

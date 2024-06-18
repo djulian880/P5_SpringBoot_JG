@@ -1,5 +1,6 @@
 package com.openclassrooms.P5_SpringBoot_JG.repository;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -14,13 +15,16 @@ import lombok.Setter;
 public class PersonRepository {
 	private Long id;
 	
-	private List<Person> persons;
+	public ArrayList<Person> persons;
 	
 
 
-	public PersonRepository(List<Person> persons) {
+	public PersonRepository(ArrayList<Person> persons) {
 		this.persons = persons;
 		
 	}
-	
+	public PersonRepository() {
+		this.persons = new ArrayList<Person>();
+		
+	}
 }

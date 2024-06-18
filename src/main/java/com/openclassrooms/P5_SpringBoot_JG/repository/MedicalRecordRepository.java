@@ -1,5 +1,6 @@
 package com.openclassrooms.P5_SpringBoot_JG.repository;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.openclassrooms.P5_SpringBoot_JG.model.MedicalRecord;
@@ -16,14 +17,17 @@ public class MedicalRecordRepository {
 
 	private Long id;
 
-private List<MedicalRecord> MedicalRecords;
+public ArrayList<MedicalRecord> medicalRecords;
 	
 
 
-	public MedicalRecordRepository(List<MedicalRecord> MedicalRecords) {
-		this.MedicalRecords = MedicalRecords;
+	public MedicalRecordRepository(ArrayList<MedicalRecord> MedicalRecords) {
+		this.medicalRecords = MedicalRecords;
 		
 	}
 
-
+	public MedicalRecordRepository() {
+		this.medicalRecords = new ArrayList<MedicalRecord>();
+		
+	}
 }

@@ -1,6 +1,8 @@
 package com.openclassrooms.P5_SpringBoot_JG;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import java.time.LocalDate;
+
 import org.json.JSONException;
 import org.junit.jupiter.api.Test;
 import org.skyscreamer.jsonassert.JSONAssert;
@@ -83,5 +85,16 @@ public class ManageRepositoriesFromFileTests {
 		
     }
 	
+
+	@Test
+    public void testformatDateFromString(){
+		
+		
+		String dateString="03/18/1984";
+		LocalDate date = LocalDate.of(1984, 03, 18);
+
+		
+		assertEquals(ManageRepositoriesFromFile.formatDateFromString(dateString),date);
+    }
 	
 }

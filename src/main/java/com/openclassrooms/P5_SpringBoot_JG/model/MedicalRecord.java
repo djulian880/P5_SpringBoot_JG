@@ -6,17 +6,23 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 
-@Getter
-@Setter
-@NoArgsConstructor // <--- THIS is it
+@Data
+@Entity
+@Table(name = "medicalrecords")
 public class MedicalRecord {
-
+	@Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
 	public String firstName;

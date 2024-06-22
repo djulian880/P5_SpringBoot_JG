@@ -1,30 +1,11 @@
 package com.openclassrooms.P5_SpringBoot_JG.repository;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import org.springframework.data.repository.CrudRepository;
+import org.springframework.stereotype.Repository;
 
 import com.openclassrooms.P5_SpringBoot_JG.model.Person;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-@Getter
-@Setter
-@NoArgsConstructor // <--- THIS is it
-public class PersonRepository {
-	private Long id;
-	
-	public ArrayList<Person> persons;
-	
+@Repository
+public interface PersonRepository extends CrudRepository<Person, Long> {
 
-
-	public PersonRepository(ArrayList<Person> persons) {
-		this.persons = persons;
-		
-	}
-	public PersonRepository() {
-		this.persons = new ArrayList<Person>();
-		
-	}
 }

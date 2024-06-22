@@ -14,6 +14,13 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Component;
+import org.springframework.web.client.RestTemplate;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -22,19 +29,22 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.openclassrooms.P5_SpringBoot_JG.model.FireStation;
 import com.openclassrooms.P5_SpringBoot_JG.model.MedicalRecord;
 import com.openclassrooms.P5_SpringBoot_JG.model.Person;
-import com.openclassrooms.P5_SpringBoot_JG.repository.FirestationRepository;
-import com.openclassrooms.P5_SpringBoot_JG.repository.MedicalRecordRepository;
-import com.openclassrooms.P5_SpringBoot_JG.repository.PersonRepository;
+import com.openclassrooms.P5_SpringBoot_JG.repository.FirestationRepo;
+import com.openclassrooms.P5_SpringBoot_JG.repository.MedicalRecordRepo;
+import com.openclassrooms.P5_SpringBoot_JG.repository.PersonRepo;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Getter
-@Setter
-@NoArgsConstructor // <--- THIS is it
-public class ManageRepositoriesFromFile {
 
+@Component
+public class ManageRepositoriesFromFile {
+	
+	@Autowired
+ 
+	
+	
 	public static String returnContentOfFileAsString(String filepath) {
 		String content = null;
 		Path filePath = Path.of(filepath);
@@ -77,7 +87,7 @@ public class ManageRepositoriesFromFile {
 		return contentOfNode;
 	}
 
-	public void readFireStations(String content, FirestationRepository firestationRepo) {
+	public void readFireStations(String content, FirestationRepo firestationRepo) {
 
 		ObjectMapper objectMapper = new ObjectMapper();
 
@@ -93,7 +103,7 @@ public class ManageRepositoriesFromFile {
 		}
 	}
 	
-	public void readMedicalRecords(String content, MedicalRecordRepository medicalRecordRepo) {
+	public void readMedicalRecords(String content, MedicalRecordRepo medicalRecordRepo) {
 
 		ObjectMapper objectMapper = new ObjectMapper();
 		DateFormat df = new SimpleDateFormat("MM/dd/yyyy");
@@ -110,7 +120,7 @@ public class ManageRepositoriesFromFile {
 		}
 	}
 	
-	public void readPersons(String content, PersonRepository personRepo) {
+	public void readPersons(String content, PersonRepo personRepo) {
 
 		ObjectMapper objectMapper = new ObjectMapper();
 
@@ -123,6 +133,11 @@ public class ManageRepositoriesFromFile {
 		} catch (JsonProcessingException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		}
+		
+		for(int i=0;i<personRepo.persons.size();i++) {
+			//personService.savePerson(personRepo.persons.get(i));
+			Person p=createPerson(personRepo.persons.get(i));
 		}
 	}
 
@@ -166,6 +181,24 @@ public class ManageRepositoriesFromFile {
 		
 		return date;
 
+	}
+	
+	
+	public Person createPerson(Person person) {
+	    String baseApiUrl = "http://localhost:8080";
+	    String createEmployeeUrl = baseApiUrl + "/person";
+
+	    RestTemplate restTemplate = new RestTemplate();
+	    HttpEntity<Person> request = new HttpEntity<Person>(person);
+	    ResponseEntity<Person> response = restTemplate.exchange(
+	        createEmployeeUrl,
+	        HttpMethod.POST,
+	        request,
+	        Person.class);
+
+	    //log.debug("Create Employee call " + response.getStatusCode().toString());
+	  //System.out.println(response.getBody());
+	    return response.getBody();
 	}
 
 }

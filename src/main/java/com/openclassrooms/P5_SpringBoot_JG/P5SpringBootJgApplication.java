@@ -8,6 +8,7 @@ import java.util.Locale;
 
 import org.springframework.boot.CommandLineRunner;
 import com.openclassrooms.P5_SpringBoot_JG.*;
+import com.openclassrooms.P5_SpringBoot_JG.controller.PersonController;
 import com.openclassrooms.P5_SpringBoot_JG.model.FireStation;
 
 import org.springframework.boot.SpringApplication;
@@ -15,9 +16,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.openclassrooms.P5_SpringBoot_JG.repository.FirestationRepository;
-import com.openclassrooms.P5_SpringBoot_JG.repository.MedicalRecordRepository;
-import com.openclassrooms.P5_SpringBoot_JG.repository.PersonRepository;
+import com.openclassrooms.P5_SpringBoot_JG.repository.FirestationRepo;
+import com.openclassrooms.P5_SpringBoot_JG.repository.MedicalRecordRepo;
+import com.openclassrooms.P5_SpringBoot_JG.repository.PersonRepo;
 import com.openclassrooms.P5_SpringBoot_JG.service.ManageRepositoriesFromFile;
 
 @RestController
@@ -47,15 +48,15 @@ public class P5SpringBootJgApplication implements CommandLineRunner {
 		
 		System.out.println("Test lecture firestations");
 		
-		
+		PersonController personController=new PersonController();
 		
 		String path="src/main/resources/data.json";
 		
-		FirestationRepository frepo=new FirestationRepository();
-		MedicalRecordRepository medicalRecordRepo=new MedicalRecordRepository();
-		PersonRepository personRepo=new PersonRepository();
+		FirestationRepo frepo=new FirestationRepo();
+		MedicalRecordRepo medicalRecordRepo=new MedicalRecordRepo();
+		PersonRepo personRepo=new PersonRepo();
 		ManageRepositoriesFromFile m= new ManageRepositoriesFromFile();
-	//	m.readFireStations(path,frepo);
+		//m.readFireStations(path,frepo);
 		
 		
 		String contenuFichier=ManageRepositoriesFromFile.returnContentOfFileAsString(path);
@@ -84,10 +85,10 @@ public class P5SpringBootJgApplication implements CommandLineRunner {
 		for(int i=0;i<medicalRecordRepo.medicalRecords.size();i++) {
 			System.out.println(medicalRecordRepo.medicalRecords.get(i).medications);
 		}
-		System.out.println("persons:");
+		/*System.out.println("persons:");
 		for(int i=0;i<personRepo.persons.size();i++) {
 			System.out.println(personRepo.persons.get(i).firstName);
-		}
+		}*/
 		
 		
 		System.out.println("Fin lecture firestations");

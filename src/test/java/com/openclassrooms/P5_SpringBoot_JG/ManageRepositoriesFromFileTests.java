@@ -9,7 +9,7 @@ import org.skyscreamer.jsonassert.JSONAssert;
 import org.skyscreamer.jsonassert.JSONCompareMode;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import com.openclassrooms.P5_SpringBoot_JG.service.ManageRepositoriesFromFile;
+import com.openclassrooms.P5_SpringBoot_JG.Util.ManageRepositoriesFromFile;
 
 @SpringBootTest
 public class ManageRepositoriesFromFileTests {

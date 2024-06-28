@@ -13,22 +13,30 @@ import lombok.Data;
 @Service
 public class PersonService {
 	  	@Autowired
-	    private PersonRepository personRepository;
+	    private PersonRepo personRepository;
 
-	    public Optional<Person> getPerson(final Long id) {
-	        return personRepository.findById(id);
+	    public Optional<Person> getPerson(String firstName, String lastName) {
+	        return personRepository.findByFirstAndLastName(firstName,lastName);
 	    }
 
 	    public Iterable<Person> getPersons() {
 	        return personRepository.findAll();
 	    }
 
-	    public void deletePerson(final Long id) {
-	    	personRepository.deleteById(id);
+	    public void deletePerson(String firstName, String lastName) {
+	    	System.out.println("Service: delete personne :"+firstName+" "+lastName);
+	    	personRepository.deleteByFirstAndLastName(firstName,lastName);
 	    }
 
 	    public Person savePerson(Person person) {
 	    	Person savedPerson = personRepository.save(person);
+	    	System.out.println("Service: update personne :"+person.getFirstName());
 	        return savedPerson;
+	    }
+	    
+	    public Person addPerson(Person person) {
+	    	System.out.println("Service: update personne :"+person.getFirstName());
+	    	Person newPerson = personRepository.add(person);
+	        return newPerson;
 	    }
 }

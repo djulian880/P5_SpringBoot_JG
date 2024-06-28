@@ -54,8 +54,8 @@ public class PersonController {
 	 */
 	@PostMapping("/person")
 	public Person createPerson(@RequestBody Person Person) {
-		
-			return personService.savePerson(Person);
+		System.out.println("Controller: écriture personne :"+Person.getFirstName());
+			return personService.addPerson(Person);
 	
 	}
 	
@@ -66,33 +66,40 @@ public class PersonController {
 	 * @param Person - The Person object updated
 	 * @return
 	 */
-	@PutMapping("/person/{id}")
-	public Person updatePerson(@PathVariable("id") final Long id, @RequestBody Person Person) {
-		Optional<Person> e = personService.getPerson(id);
+	@PutMapping("/person")
+	public Person updatePerson(@RequestBody Person Person) {
+		System.out.println("Controller: update personne :"+Person.getFirstName());
+		Optional<Person> e = personService.getPerson(Person.getFirstName(),Person.getLastName());
 		if(e.isPresent()) {
 			Person currentPerson = e.get();
 			
-			/*public String firstName;
-			public String lastName;
-			public String address;
-			public String city;
-			public int zip;
-			public String phone;
-			public String email;
-			*/
-			
-			String firstName = Person.getFirstName();
-			if(firstName != null) {
-				currentPerson.setFirstName(firstName);
+
+			System.out.println("Controller: update personne trouvée :"+currentPerson.getFirstName());
+			String address = Person.getAddress();
+			if(address != null) {
+				currentPerson.setAddress(address);
 			}
-			String lastName = Person.getLastName();
-			if(lastName != null) {
-				currentPerson.setLastName(lastName);;
+			String city = Person.getCity();
+			if(city != null) {
+				currentPerson.setCity(city);
 			}
-	
+			Integer zip = Person.getZip();
+			if(zip != null) {
+				currentPerson.setZip(zip);
+			}
+			String phone = Person.getPhone();
+			if(phone != null) {
+				currentPerson.setPhone(phone);
+			}
+			String email = Person.getEmail();
+			if(email != null) {
+				currentPerson.setEmail(email);
+			}
 			
-			personService.savePerson(currentPerson);
-			return currentPerson;
+			
+			
+			
+			return personService.savePerson(currentPerson);
 		} else {
 			return null;
 		}
@@ -109,14 +116,12 @@ public class PersonController {
 		String lastName = Person.getLastName();
 		
 		if(firstName != null && lastName != null ) {
-	
+			System.out.println("Controller: suppression personne :"+firstName+" "+lastName);
+			personService.deletePerson(firstName, lastName);
 		}
 		
 		
-		System.out.println("Personne récupérée");
-		System.out.println(Person.getFirstName());
-		System.out.println(Person.getLastName());
-		System.out.println(Person.getEmail());
+	
 		/*Long id;
 		personService.deletePerson(id);*/
 	}

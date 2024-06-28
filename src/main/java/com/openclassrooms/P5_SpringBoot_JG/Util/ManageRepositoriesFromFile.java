@@ -1,4 +1,4 @@
-package com.openclassrooms.P5_SpringBoot_JG.service;
+package com.openclassrooms.P5_SpringBoot_JG.Util;
 
 import java.io.File;
 import java.io.IOException;

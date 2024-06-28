@@ -8,6 +8,7 @@ import java.util.Locale;
 
 import org.springframework.boot.CommandLineRunner;
 import com.openclassrooms.P5_SpringBoot_JG.*;
+import com.openclassrooms.P5_SpringBoot_JG.Util.ManageRepositoriesFromFile;
 import com.openclassrooms.P5_SpringBoot_JG.controller.PersonController;
 import com.openclassrooms.P5_SpringBoot_JG.model.FireStation;
 
@@ -19,7 +20,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.openclassrooms.P5_SpringBoot_JG.repository.FirestationRepo;
 import com.openclassrooms.P5_SpringBoot_JG.repository.MedicalRecordRepo;
 import com.openclassrooms.P5_SpringBoot_JG.repository.PersonRepo;
-import com.openclassrooms.P5_SpringBoot_JG.service.ManageRepositoriesFromFile;
 
 @RestController
 @SpringBootApplication
@@ -58,7 +58,7 @@ public class P5SpringBootJgApplication implements CommandLineRunner {
 		ManageRepositoriesFromFile m= new ManageRepositoriesFromFile();
 		//m.readFireStations(path,frepo);
 		
-		
+		/*
 		String contenuFichier=ManageRepositoriesFromFile.returnContentOfFileAsString(path);
 		String contenuNoeud=ManageRepositoriesFromFile.returnContentOfJSONNodeAsString(contenuFichier,"firestations");
 		m.readFireStations(contenuNoeud,frepo);
@@ -68,15 +68,15 @@ public class P5SpringBootJgApplication implements CommandLineRunner {
 		
 		contenuNoeud=ManageRepositoriesFromFile.returnContentOfJSONNodeAsString(contenuFichier,"persons");
 		m.readPersons(contenuNoeud,personRepo);
+		*/
 		
 		
 		
 		
-		
-		System.out.println(contenuNoeud);
+		//System.out.println(contenuNoeud);
 		//frepo.firestations=ManageRepositoriesFromFile.readCollectionFromJSONString(contenuNoeud,new FireStation());
 		
-
+/*
 		System.out.println("firestations:");
 		for(int i=0;i<frepo.firestations.size();i++) {
 			System.out.println(frepo.firestations.get(i).address);

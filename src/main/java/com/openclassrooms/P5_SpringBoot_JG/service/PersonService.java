@@ -13,7 +13,7 @@ import lombok.Data;
 @Service
 public class PersonService {
 	  	@Autowired
-	    private PersonRepo personRepository;
+	    private PersonRepository personRepository;
 
 	    public Optional<Person> getPerson(String firstName, String lastName) {
 	        return personRepository.findByFirstAndLastName(firstName,lastName);

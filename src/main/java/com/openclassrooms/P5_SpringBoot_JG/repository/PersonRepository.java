@@ -26,7 +26,7 @@ import lombok.Setter;
 @NoArgsConstructor // <--- THIS is it
 
 @Repository
-public class PersonRepo {
+public class PersonRepository {
 	@Autowired
 
 	private static String path = "src/main/resources/data.json";

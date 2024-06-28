@@ -13,7 +13,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor // <--- THIS is it
-public class MedicalRecordRepo {
+public class MedicalRecordRepository {
 
 	private Long id;
 
@@ -21,7 +21,7 @@ public ArrayList<MedicalRecord> medicalRecords;
 	
 
 
-	public MedicalRecordRepo(ArrayList<MedicalRecord> MedicalRecords) {
+	public MedicalRecordRepository(ArrayList<MedicalRecord> MedicalRecords) {
 		this.medicalRecords = MedicalRecords;
 		
 	}

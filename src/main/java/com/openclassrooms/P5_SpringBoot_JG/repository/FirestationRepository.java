@@ -12,7 +12,7 @@ import lombok.Setter;
 //@Getter
 //@Setter
 //@NoArgsConstructor // <--- THIS is it
-public class FirestationRepo {
+public class FirestationRepository {
 
 	private Long id;
 	
@@ -20,12 +20,12 @@ public class FirestationRepo {
 	
 
 
-	public FirestationRepo(ArrayList<FireStation> firestations) {
+	public FirestationRepository(ArrayList<FireStation> firestations) {
 		this.firestations = firestations;
 		
 	}
 	
-	public FirestationRepo() {
+	public FirestationRepository() {
 		this.firestations=new ArrayList<FireStation>();
 		
 

@@ -17,9 +17,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.openclassrooms.P5_SpringBoot_JG.repository.FirestationRepo;
-import com.openclassrooms.P5_SpringBoot_JG.repository.MedicalRecordRepo;
-import com.openclassrooms.P5_SpringBoot_JG.repository.PersonRepo;
+import com.openclassrooms.P5_SpringBoot_JG.repository.FirestationRepository;
+import com.openclassrooms.P5_SpringBoot_JG.repository.MedicalRecordRepository;
+import com.openclassrooms.P5_SpringBoot_JG.repository.PersonRepository;
 
 @RestController
 @SpringBootApplication
@@ -52,9 +52,9 @@ public class P5SpringBootJgApplication implements CommandLineRunner {
 		
 		String path="src/main/resources/data.json";
 		
-		FirestationRepo frepo=new FirestationRepo();
-		MedicalRecordRepo medicalRecordRepo=new MedicalRecordRepo();
-		PersonRepo personRepo=new PersonRepo();
+		FirestationRepository frepo=new FirestationRepository();
+		MedicalRecordRepository medicalRecordRepo=new MedicalRecordRepository();
+		PersonRepository personRepo=new PersonRepository();
 		ManageRepositoriesFromFile m= new ManageRepositoriesFromFile();
 		//m.readFireStations(path,frepo);
 		

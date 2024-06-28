@@ -16,19 +16,23 @@ public class MedicalRecordService {
 	    private MedicalRecordRepository medicalRecordRepository;
 
 	    public Optional<MedicalRecord> getMedicalRecord(final Long id) {
-	        return medicalRecordRepository.findById(id);
+	        //return medicalRecordRepository.findById(id);
+	        return null;
 	    }
 
 	    public Iterable<MedicalRecord> getMedicalRecords() {
-	        return medicalRecordRepository.findAll();
+	       // return medicalRecordRepository.findAll();
+	        return null;
 	    }
 
 	    public void deleteMedicalRecord(final Long id) {
-	    	medicalRecordRepository.deleteById(id);
+	    	//medicalRecordRepository.deleteById(id);
+	    	
 	    }
 
 	    public MedicalRecord saveMedicalRecord(MedicalRecord medicalRecord) {
-	    	MedicalRecord savedMedicalRecord = medicalRecordRepository.save(medicalRecord);
-	        return savedMedicalRecord;
+	    	//MedicalRecord savedMedicalRecord = medicalRecordRepository.save(medicalRecord);
+	       // return savedMedicalRecord;
+	    	return null;
 	    }
 }

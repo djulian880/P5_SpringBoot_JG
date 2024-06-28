@@ -29,9 +29,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.openclassrooms.P5_SpringBoot_JG.model.FireStation;
 import com.openclassrooms.P5_SpringBoot_JG.model.MedicalRecord;
 import com.openclassrooms.P5_SpringBoot_JG.model.Person;
-import com.openclassrooms.P5_SpringBoot_JG.repository.FirestationRepo;
-import com.openclassrooms.P5_SpringBoot_JG.repository.MedicalRecordRepo;
-import com.openclassrooms.P5_SpringBoot_JG.repository.PersonRepo;
+import com.openclassrooms.P5_SpringBoot_JG.repository.FirestationRepository;
+import com.openclassrooms.P5_SpringBoot_JG.repository.MedicalRecordRepository;
+import com.openclassrooms.P5_SpringBoot_JG.repository.PersonRepository;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -87,7 +87,7 @@ public class ManageRepositoriesFromFile {
 		return contentOfNode;
 	}
 
-	public void readFireStations(String content, FirestationRepo firestationRepo) {
+	public void readFireStations(String content, FirestationRepository firestationRepo) {
 
 		ObjectMapper objectMapper = new ObjectMapper();
 
@@ -103,7 +103,7 @@ public class ManageRepositoriesFromFile {
 		}
 	}
 	
-	public void readMedicalRecords(String content, MedicalRecordRepo medicalRecordRepo) {
+	public void readMedicalRecords(String content, MedicalRecordRepository medicalRecordRepo) {
 
 		ObjectMapper objectMapper = new ObjectMapper();
 		DateFormat df = new SimpleDateFormat("MM/dd/yyyy");
@@ -120,7 +120,7 @@ public class ManageRepositoriesFromFile {
 		}
 	}
 	
-	public void readPersons(String content, PersonRepo personRepo) {
+	public void readPersons(String content, PersonRepository personRepo) {
 
 		ObjectMapper objectMapper = new ObjectMapper();
 

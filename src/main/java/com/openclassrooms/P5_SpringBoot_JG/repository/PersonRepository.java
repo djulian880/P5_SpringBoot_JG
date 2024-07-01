@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -23,21 +25,25 @@ import lombok.Setter;
 
 @Getter
 @Setter
-@NoArgsConstructor // <--- THIS is it
+@NoArgsConstructor
 
 @Repository
 public class PersonRepository {
 	@Autowired
 
+	private static Logger logger = LoggerFactory.getLogger(PersonRepository.class);
+
 	private static String path = "src/main/resources/data.json";
 
 	public ArrayList<Person> persons;
+	
+	private ObjectMapper objectMapper = new ObjectMapper();
 
-	public Optional<Person> findByFirstAndLastName(String firstName, String lastName) {
+	public Person findByFirstAndLastName(String firstName, String lastName) {
 		readFromJson();
 		for (Person person : persons) {
 			if (person.getFirstName().equals(firstName) && person.getLastName().equals(lastName)) {
-				return Optional.of(person);
+				return person;
 			}
 		}
 		return null;
@@ -50,28 +56,29 @@ public class PersonRepository {
 
 	public void deleteByFirstAndLastName(String firstName, String lastName) {
 
-		Optional<Person> person = findByFirstAndLastName(firstName, lastName);
+		Optional<Person> person = Optional.ofNullable(findByFirstAndLastName(firstName, lastName));
+
 		if (person.isPresent()) {
 			Person personToDelete = person.get();
-			System.out.println("Repo: suppression personne :" + personToDelete.getFirstName());
+			logger.trace("suppression personne :" + personToDelete.getFirstName());
 			persons.remove(personToDelete);
 			saveToJson();
 		} else {
-			// TODO
+			logger.error("Personne non trouvée: " + firstName + " " + lastName);
 		}
 
 	}
 
 	public Person add(Person person) {
 		readFromJson();
-		System.out.println("Repo: ajout personne :" + person.getFirstName());
+		logger.trace("ajout personne :" + person.getFirstName());
 		persons.add(person);
 		saveToJson();
 		return persons.get(persons.lastIndexOf(person));
 	}
 
 	public Person save(Person p) {
-		System.out.println("Repo: modification personne :" + p.getFirstName());
+		logger.trace("Modification personne :" + p.getFirstName());
 		readFromJson();
 		for (Person person : persons) {
 			if (person.getFirstName().equals(p.getFirstName()) && person.getLastName().equals(p.getLastName())) {
@@ -82,20 +89,19 @@ public class PersonRepository {
 				person.setZip(p.getZip());
 				saveToJson();
 
-				System.out.println("Repo: personne trouvée :" + person.getFirstName());
+				logger.trace("personne trouvée :" + person.getFirstName());
 				return person;
 
 			}
 		}
 
-		System.out.println("Repo: personne pas trouvée :" + p.getFirstName());
+		logger.trace("personne pas trouvée :" + p.getFirstName());
 
 		return null;
 
 	}
 
 	private void saveToJson() {
-		ObjectMapper objectMapper = new ObjectMapper();
 
 		JsonNode fileContent;
 
@@ -110,29 +116,23 @@ public class PersonRepository {
 
 			objectMapper.writeValue(file, fileContent);
 		} catch (JsonMappingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error(e.toString());
 		} catch (JsonProcessingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error(e.toString());
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error(e.toString());
 		}
 
 	}
 
 	public void readPersonsFromJson(String content) {
-		ObjectMapper objectMapper = new ObjectMapper();
 		try {
 			persons = objectMapper.readValue(content, new TypeReference<ArrayList<Person>>() {
 			});
 		} catch (JsonMappingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error(e.toString());
 		} catch (JsonProcessingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error(e.toString());
 		}
 	}
 

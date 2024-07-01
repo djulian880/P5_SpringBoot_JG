@@ -14,6 +14,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
@@ -44,17 +46,16 @@ public class ManageRepositoriesFromFile {
 	@Autowired
  
 	
+	private static Logger logger = LoggerFactory.getLogger(ManageRepositoriesFromFile.class);
+	
 	
 	public static String returnContentOfFileAsString(String filepath) {
 		String content = null;
 		Path filePath = Path.of(filepath);
-
 		try {
-
 			content = Files.readString(filePath);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error(e.toString());
 		}
 		return content;
 	}
@@ -65,140 +66,25 @@ public class ManageRepositoriesFromFile {
 		String contentOfNode = null;
 		try {
 			jsonNode = objectMapper.readTree(content);
-			// System.out.println(nodeName);
-			// System.out.println(jsonNode.get(nodeName).isContainerNode());
-			/*
-			 * Iterator<String> iterator = jsonNode.fieldNames();
-			 * 
-			 * while (iterator.hasNext()) { System.out.println("Element Value= " +
-			 * iterator.next()); }
-			 */
-
 			contentOfNode = jsonNode.get(nodeName).toString();
-			// System.out.println("Contenu du noeud");
-			// System.out.println(contentOfNode);
 		} catch (JsonMappingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error(e.toString());
 		} catch (JsonProcessingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error(e.toString());
 		}
 		return contentOfNode;
 	}
 
-	public void readFireStations(String content, FirestationRepository firestationRepo) {
-
-		ObjectMapper objectMapper = new ObjectMapper();
-
-		try {
-			firestationRepo.firestations = objectMapper.readValue(content, new TypeReference<ArrayList<FireStation>>() {
-			});
-		} catch (JsonMappingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (JsonProcessingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-	
-	public void readMedicalRecords(String content, MedicalRecordRepository medicalRecordRepo) {
-
-		ObjectMapper objectMapper = new ObjectMapper();
-		DateFormat df = new SimpleDateFormat("MM/dd/yyyy");
-		objectMapper.setDateFormat(df);
-		try {
-			medicalRecordRepo.medicalRecords = objectMapper.readValue(content, new TypeReference<ArrayList<MedicalRecord>>() {
-			});
-		} catch (JsonMappingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (JsonProcessingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-	
-	public void readPersons(String content, PersonRepository personRepo) {
-
-		ObjectMapper objectMapper = new ObjectMapper();
-
-		try {
-			personRepo.persons = objectMapper.readValue(content, new TypeReference<ArrayList<Person>>() {
-			});
-		} catch (JsonMappingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (JsonProcessingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		for(int i=0;i<personRepo.persons.size();i++) {
-			//personService.savePerson(personRepo.persons.get(i));
-			Person p=createPerson(personRepo.persons.get(i));
-		}
-	}
-
-	// BUG A METTRE à jour
-	public static <T> ArrayList<T> readCollectionFromJSONString(String contenuNoeud, T o) {
-
-		ObjectMapper objectMapper = new ObjectMapper();
-		JsonNode jsonNode;
-
-		ArrayList<T> object = null;
-		// String contenuFichier=returnContentOfFileAsString(content);
-		// String
-		// contenuNoeud=returnContentOfJSONNodeAsString(contenuFichier,"firestations");
-
-		// firestations = objectMapper.readValue(list, FirestationRepository.class);
-		try {
-			object = objectMapper.readValue(contenuNoeud, new TypeReference<ArrayList<T>>() {
-			});
-			System.out.println(object.getClass().toString());
-
-			ArrayList l = (ArrayList) object;
-			System.out.println("Taille objet:" + l.size());
-
-		} catch (JsonMappingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (JsonProcessingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-		return object;
-	}
 	
 	public static LocalDate formatDateFromString(String stringDate) {
 		int year=Integer.parseInt(stringDate.substring(6, 10));
 		int month=Integer.parseInt(stringDate.substring(0, 2));
 		int day=Integer.parseInt(stringDate.substring(3, 5));
-		//System.out.println(stringDate+" :"+year+" "+month+" "+day);
 		LocalDate date = LocalDate.of(year, month, day);
 		
 		return date;
 
 	}
 	
-	
-	public Person createPerson(Person person) {
-	    String baseApiUrl = "http://localhost:8080";
-	    String createEmployeeUrl = baseApiUrl + "/person";
-
-	    RestTemplate restTemplate = new RestTemplate();
-	    HttpEntity<Person> request = new HttpEntity<Person>(person);
-	    ResponseEntity<Person> response = restTemplate.exchange(
-	        createEmployeeUrl,
-	        HttpMethod.POST,
-	        request,
-	        Person.class);
-
-	    //log.debug("Create Employee call " + response.getStatusCode().toString());
-	  //System.out.println(response.getBody());
-	    return response.getBody();
-	}
 
 }

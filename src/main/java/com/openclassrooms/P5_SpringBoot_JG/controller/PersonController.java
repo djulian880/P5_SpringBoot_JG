@@ -27,7 +27,7 @@ public class PersonController {
 	/**
 	 * Read - Get all persons
 	 * 
-	 * @return - An Iterable object of Employee full filled
+	 * @return - An Iterable object of Person full filled
 	 */
 	@GetMapping("/persons")
 	public Iterable<Person> getPersons() {

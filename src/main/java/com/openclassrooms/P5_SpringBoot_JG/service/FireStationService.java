@@ -11,7 +11,8 @@ import lombok.Data;
 @Data
 @Service
 public class FireStationService {
-	  @Autowired
+	
+		@Autowired
 	    private FireStationRepository fireStationRepository;
 	    
 		public FireStation getFireStation(String address) {

@@ -3,8 +3,18 @@ package com.openclassrooms.P5_SpringBoot_JG.model;
 import java.util.Date;
 import java.util.List;
 
-public class PersonDTO {
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import lombok.Data;
 
+@Data
+public class PersonDTO {
+	
+	@Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
+	
 	public String firstName;
 	public String lastName;
 	public Date birthdate;

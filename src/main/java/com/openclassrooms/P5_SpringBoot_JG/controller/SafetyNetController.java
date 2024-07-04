@@ -1,29 +1,36 @@
 package com.openclassrooms.P5_SpringBoot_JG.controller;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.openclassrooms.P5_SpringBoot_JG.model.MedicalRecord;
-import com.openclassrooms.P5_SpringBoot_JG.model.Person;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.openclassrooms.P5_SpringBoot_JG.model.PersonDTO;
 import com.openclassrooms.P5_SpringBoot_JG.service.PersonDTOMapper;
+import com.openclassrooms.P5_SpringBoot_JG.Util.ManageRepositoriesFromFile;
+import com.openclassrooms.P5_SpringBoot_JG.Util.SafetyNetUtil;
 
 @RestController
 public class SafetyNetController {
 
 	@Autowired
 	private PersonDTOMapper personDTOMapper;
-	
+
 	private static Logger logger = LoggerFactory.getLogger(PersonController.class);
-	
-	
 
 	// http://localhost:8080/firestation?stationNumber=<station_number>
 //		Cette url doit retourner une liste des personnes couvertes par la caserne de pompiers
@@ -32,10 +39,44 @@ public class SafetyNetController {
 //		suivantes : prénom, nom, adresse, numéro de téléphone. De plus, elle doit fournir un
 //		décompte du nombre d'adultes et du nombre d'enfants (tout individu âgé de 18 ans ou
 //		moins) dans la zone desservie.
-	@RequestMapping("/firestation")
-	List<String> returnPersonsBySation(@RequestParam(name = "stationNumber", required = true) Integer stationNumber) {
+	@GetMapping("/firestation")
+	ArrayNode returnPersonsBySation(@RequestParam(name = "stationNumber", required = true) Integer stationNumber) {
 
-		return null;
+		ObjectMapper mapper = new ObjectMapper();
+
+		ArrayNode resultArray = mapper.createArrayNode();
+		Integer countOfChildren = 0;
+		Integer countOfAdults = 0;
+		double age;
+		for (PersonDTO personDTO : personDTOMapper.getAllPersons()) {
+
+			if (personDTO.getStation() == stationNumber) {
+				
+				ObjectNode currentNode = mapper.createObjectNode();
+				currentNode.put("FirstName", personDTO.getFirstName());
+				currentNode.put("LastName", personDTO.getLastName());
+				currentNode.put("address", personDTO.getAddress());
+				currentNode.put("phone", personDTO.getPhone());
+				age = SafetyNetUtil.calculateAge(personDTO.getBirthdate());
+				if (age > 18) {
+					countOfAdults++;
+				} else {
+					countOfChildren++;
+				}
+
+				resultArray.add(currentNode);
+
+			}
+
+		}
+
+		HashMap<String, Integer> counts = new HashMap<String, Integer>();
+		counts.put("countOfChild", countOfChildren);
+		counts.put("countOfAdults", countOfAdults);
+
+		resultArray.add(SafetyNetUtil.mapToJSONNodeInt(counts));
+
+		return resultArray;
 	}
 
 //		http://localhost:8080/childAlert?address=<address>
@@ -43,21 +84,77 @@ public class SafetyNetController {
 //		habitant à cette adresse. La liste doit comprendre le prénom et le nom de famille de
 //		chaque enfant, son âge et une liste des autres membres du foyer. S'il n'y a pas
 //		d'enfant, cette url peut renvoyer une chaîne vide.
-	@RequestMapping("/childAlert")
-	List<String> returnChildsByAddress(@RequestParam(name = "address", required = true) String address) {
+	@GetMapping("/childAlert")
+	ArrayNode returnChildsByAddress(@RequestParam(name = "address", required = true) String address) {
 
-		return null;
+		ObjectMapper mapper = new ObjectMapper();
+
+		ArrayNode resultArray = mapper.createArrayNode();
+		List<String> otherMembers=new ArrayList<String>();
+		
+		for (PersonDTO personDTO : personDTOMapper.getAllPersons()) {
+			
+			
+			if (personDTO.getAddress().equals(address)) {
+				double age=SafetyNetUtil.calculateAge(personDTO.getBirthdate());
+				ObjectNode currentNode = mapper.createObjectNode();
+				
+				if(age<=18) {
+					currentNode.put("FirstName", personDTO.getFirstName());
+					currentNode.put("LastName", personDTO.getLastName());
+					currentNode.put("age", Math.round(SafetyNetUtil.calculateAge(personDTO.getBirthdate())));
+
+					resultArray.add(currentNode);
+				}
+				else {
+					otherMembers.add(personDTO.getFirstName());
+				}
+			}
+		}
+		
+		if (!resultArray.isEmpty()) {
+			ObjectNode currentNode = mapper.createObjectNode();
+		
+			currentNode.set("otherMembers", SafetyNetUtil.listToJSONString(otherMembers));
+				
+		
+			resultArray.add(currentNode);
+		}
+		
+		return resultArray;
 	}
 
 //		http://localhost:8080/phoneAlert?firestation=<firestation_number>
 //		Cette url doit retourner une liste des numéros de téléphone des résidents desservis
 //		par la caserne de pompiers. Nous l'utiliserons pour envoyer des messages texte
 //		d'urgence à des foyers spécifiques.
-	@RequestMapping("/phoneAlert")
-	List<String> returnPhonesByStation(
-			@RequestParam(name = "firestation_number", required = true) Integer stationNumber) {
+	@GetMapping("/phoneAlert")
+	ArrayNode returnPhonesByStation(@RequestParam(name = "firestation", required = true) Integer stationNumber) {
 
-		return null;
+		ArrayList<String> result = new ArrayList<>();
+		ObjectMapper mapper = new ObjectMapper();
+
+		ArrayNode resultArray = mapper.createArrayNode();
+		for (PersonDTO personDTO : personDTOMapper.getAllPersons()) {
+
+			if (personDTO.getStation() == stationNumber) {
+				String phone = personDTO.getPhone();
+				if (!result.contains(phone)) {
+					result.add(phone);
+				}
+			}
+		}
+
+		for (String res : result) {
+
+			ObjectNode currentNode = mapper.createObjectNode();
+			currentNode.put("phone", res);
+
+			resultArray.add(currentNode);
+		}
+
+		return resultArray;
+
 	}
 
 //		http://localhost:8080/fire?address=<address>
@@ -65,10 +162,34 @@ public class SafetyNetController {
 //		numéro de la caserne de pompiers la desservant. La liste doit inclure le nom, le
 //		numéro de téléphone, l'âge et les antécédents médicaux (médicaments, posologie et
 //		allergies) de chaque personne.
-	@RequestMapping("/fire")
-	List<String> returnPersonsAndStationByAddress(@RequestParam(name = "address", required = true) String address) {
+	@GetMapping("/fire")
+	ArrayNode returnPersonsAndStationByAddress(@RequestParam(name = "address", required = true) String address) {
 
-		return null;
+		ObjectMapper mapper = new ObjectMapper();
+
+		ArrayNode resultArray = mapper.createArrayNode();
+
+		
+
+		for (PersonDTO personDTO : personDTOMapper.getAllPersons()) {
+
+			if (personDTO.getAddress().equals(address)) {
+				ObjectNode currentNode = mapper.createObjectNode();
+				currentNode.put("LastName", personDTO.getLastName());
+				currentNode.put("phone", personDTO.getPhone());
+				currentNode.put("station", String.valueOf(personDTO.getStation()));
+
+				currentNode.set("allergies", SafetyNetUtil.listToJSONString(personDTO.getAllergies()));
+				currentNode.set("medications", SafetyNetUtil.listToJSONString(personDTO.getMedications()));
+				
+				currentNode.put("age", Math.round(SafetyNetUtil.calculateAge(personDTO.getBirthdate())));
+
+				resultArray.add(currentNode);
+
+			}
+		}
+
+		return resultArray;
 	}
 
 	// http://localhost:8080/flood/stations?stations=<a list of station_numbers>
@@ -79,11 +200,43 @@ public class SafetyNetController {
 	// numéro de téléphone et l'âge des habitants, et faire figurer leurs
 	// antécédents
 	// médicaux (médicaments, posologie et allergies) à côté de chaque nom.
-	@RequestMapping("/flood/stations")
-	List<String> returnHomesAndPersonsMedicalRecordsByStationNumber(
+	@GetMapping("/flood/stations")
+	ArrayNode returnHomesAndPersonsMedicalRecordsByStationNumber(
 			@RequestParam(name = "stations", required = true) List<Integer> stationNumbers) {
 
-		return null;
+		ObjectMapper mapper = new ObjectMapper();
+
+		ArrayNode resultArray = mapper.createArrayNode();
+
+		ObjectNode currentNode = mapper.createObjectNode();
+		
+		Map <String,List<PersonDTO>> listPersons=new HashMap <String,List<PersonDTO>>();
+		
+		for (PersonDTO personDTO : personDTOMapper.getAllPersons()) {
+
+			if (stationNumbers.contains(personDTO.getStation())) {
+
+				listPersons.computeIfAbsent(personDTO.getAddress(), k -> new ArrayList<>()).add(personDTO);
+			}
+		}
+
+		  
+		for (Map.Entry<String, List<PersonDTO>> entry : listPersons.entrySet()) {
+			for (PersonDTO personDTO : entry.getValue()) {
+				currentNode.put("address", personDTO.getAddress());
+				currentNode.put("LastName", personDTO.getLastName());
+				currentNode.put("phone", personDTO.getPhone());
+
+				currentNode.set("allergies", SafetyNetUtil.listToJSONString(personDTO.getAllergies()));
+				currentNode.set("medications", SafetyNetUtil.listToJSONString(personDTO.getMedications()));
+
+
+				currentNode.put("age", Math.round(SafetyNetUtil.calculateAge(personDTO.getBirthdate())));
+				resultArray.add(currentNode);
+			}
+        }
+		return resultArray;
+
 	}
 
 	// http://localhost:8080/personInfolastName=<lastName>
@@ -93,29 +246,52 @@ public class SafetyNetController {
 	// plusieurs
 	// personnes portent le même nom, elles doivent toutes apparaître.
 
-	@RequestMapping("/")
-	List<String> returnPersonsByLastName(@RequestParam(name = "personInfolastName", required = true) String lastName) {
+	@GetMapping("/")
+	ArrayNode returnPersonsByLastName(@RequestParam(name = "personInfolastName", required = true) String lastName) {
 
-		return null;
+		ObjectMapper mapper = new ObjectMapper();
+
+		ArrayNode resultArray = mapper.createArrayNode();
+
+		
+		//JsonNode jNode;
+		for (PersonDTO personDTO : personDTOMapper.getAllPersons()) {
+
+			if (personDTO.getLastName().equals(lastName)) {
+				ObjectNode currentNode = mapper.createObjectNode();
+				currentNode.put("LastName", personDTO.getLastName());
+				currentNode.put("address", personDTO.getAddress());
+				currentNode.put("email", personDTO.getEmail());
+
+				currentNode.set("allergies", SafetyNetUtil.listToJSONString(personDTO.getAllergies()));
+				currentNode.set("medications", SafetyNetUtil.listToJSONString(personDTO.getMedications()));
+
+
+				currentNode.put("age", Math.round(SafetyNetUtil.calculateAge(personDTO.getBirthdate())));
+
+				resultArray.add(currentNode);
+
+			}
+		}
+
+		return resultArray;
 	}
 
 	// Cette url doit retourner les adresses mail de tous les habitants de la ville.
-	@RequestMapping("/communityEmail")
-	List<String> returnCommunityEmails(@RequestParam(name = "city", required = true) String city) {
-		
-		ArrayList<String> result=new ArrayList<>();
-		
-		
+	@GetMapping("/communityEmail")
+	ArrayNode returnCommunityEmails(@RequestParam(name = "city", required = true) String city) {
+
+		ArrayList<String> result = new ArrayList<>();
 		for (PersonDTO personDTO : personDTOMapper.getAllPersons()) {
-			
-			if(personDTO.getCity().equals(city)) {
-				result.add(personDTO.getEmail());
+			if (personDTO.getCity().equals(city)) {
+				String email = personDTO.getEmail();
+				if (!result.contains(email)) {
+					result.add(email);
+				}
 			}
-
-
 		}
-		
-		return result;
+
+		return SafetyNetUtil.listSameFieldNameToJSON("email",result);
 	}
 
 }

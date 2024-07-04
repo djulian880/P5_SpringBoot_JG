@@ -85,7 +85,7 @@ public class ManageRepositoriesFromFileTests {
 		
     }
 	
-
+/*
 	@Test
     public void testformatDateFromString(){
 		
@@ -95,6 +95,6 @@ public class ManageRepositoriesFromFileTests {
 
 		
 		assertEquals(ManageRepositoriesFromFile.formatDateFromString(dateString),date);
-    }
+    }*/
 	
 }

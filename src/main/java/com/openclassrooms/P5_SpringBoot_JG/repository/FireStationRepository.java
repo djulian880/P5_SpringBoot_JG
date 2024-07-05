@@ -28,113 +28,102 @@ import lombok.Setter;
 
 @Repository
 public class FireStationRepository {
-	 @Autowired
-	
-	 
-		private static Logger logger = LoggerFactory.getLogger(FireStationRepository.class);
-		
-		private static String path = "src/main/resources/data.json";
-		
-		private ObjectMapper objectMapper = new ObjectMapper();
-		
-		public ArrayList<FireStation> fireStations;
-		
-		public FireStation findByAddress(String address) {
-			readFromJson();
-			for (FireStation fireStation : fireStations) {
-				if (fireStation.getAddress().equals(address)) {
-					return fireStation;
-				}
+	@Autowired
+
+	private static Logger logger = LoggerFactory.getLogger(FireStationRepository.class);
+
+	private static String path = "src/main/resources/data.json";
+
+	private ObjectMapper objectMapper = new ObjectMapper();
+
+	public ArrayList<FireStation> fireStations;
+
+	public FireStation findByAddress(String address) {
+		readFromJson();
+		for (FireStation fireStation : fireStations) {
+			if (fireStation.getAddress().equals(address)) {
+				return fireStation;
 			}
-			return null;
 		}
+		return null;
+	}
 
-		public Iterable<FireStation> findAll() {
-			readFromJson();
-			return fireStations;
-		}
+	public Iterable<FireStation> findAll() {
+		readFromJson();
+		return fireStations;
+	}
 
-		public void deleteByAddress(String address) {
-
-			Optional<FireStation> fireStation = Optional.ofNullable(findByAddress(address));
-
-			if (fireStation.isPresent()) {
-				FireStation fireStationToDelete = fireStation.get();
-				logger.trace("suppression caserne de pompier :" + fireStationToDelete.getAddress());
-				fireStations.remove(fireStationToDelete);
-				saveToJson();
-			} else {
-				logger.error("caserne de pompier non trouvée: " + address);
-			}
-
-		}
-
-		public FireStation add(FireStation fireStation) {
-			readFromJson();
-			logger.trace("ajout caserne de pompier :" + fireStation.getAddress()+" "+fireStation.getStation());
-			fireStations.add(fireStation);
+	public void deleteByAddress(String address) {
+		Optional<FireStation> fireStation = Optional.ofNullable(findByAddress(address));
+		if (fireStation.isPresent()) {
+			FireStation fireStationToDelete = fireStation.get();
+			logger.debug("deletion of firestation :" + fireStationToDelete.getAddress());
+			fireStations.remove(fireStationToDelete);
 			saveToJson();
-			return fireStations.get(fireStations.lastIndexOf(fireStation));
+		} else {
+			logger.error("firestation not found at: " + address);
 		}
 
-		public FireStation save(FireStation fireStation) {
-			logger.trace("Modification caserne de pompier :" + fireStation.getAddress()+" "+fireStation.getStation());
-			readFromJson();
-			for (FireStation fireStationEnCours : fireStations) {
-				if (fireStationEnCours.getAddress().equals(fireStation.getAddress()) ) {
-					fireStationEnCours.setStation(fireStation.getStation());
-					saveToJson();
+	}
 
-					logger.trace("caserne de pompier trouvée :" + fireStationEnCours.getAddress());
-					return fireStationEnCours;
+	public FireStation add(FireStation fireStation) {
+		readFromJson();
+		logger.debug("creation of firesation :" + fireStation.getAddress() + " " + fireStation.getStation());
+		fireStations.add(fireStation);
+		saveToJson();
+		return fireStations.get(fireStations.lastIndexOf(fireStation));
+	}
 
-				}
-			}
+	public FireStation save(FireStation fireStation) {
+		logger.debug("Update of firestation :" + fireStation.getAddress() + " " + fireStation.getStation());
+		readFromJson();
+		for (FireStation fireStationEnCours : fireStations) {
+			if (fireStationEnCours.getAddress().equals(fireStation.getAddress())) {
+				fireStationEnCours.setStation(fireStation.getStation());
+				saveToJson();
 
-			logger.trace("caserne de pompier pas trouvée :" + fireStation.getAddress());
+				logger.debug("Firestation found :" + fireStationEnCours.getAddress());
+				return fireStationEnCours;
 
-			return null;
-
-		}
-
-		private void saveToJson() {
-
-			JsonNode fileContent;
-
-			try {
-				fileContent = objectMapper.readTree(ManageRepositoriesFromFile.returnContentOfFileAsString(path));
-				String contenu = objectMapper.writeValueAsString(fireStations);
-				JsonNode fireStationsAsJsonNode = objectMapper.readTree(contenu);
-
-				((ObjectNode) fileContent).set("firestations", fireStationsAsJsonNode);
-
-				FileWriter file = new FileWriter(path);
-
-				objectMapper.writeValue(file, fileContent);
-			} catch (JsonMappingException e) {
-				logger.error(e.toString());
-			} catch (JsonProcessingException e) {
-				logger.error(e.toString());
-			} catch (IOException e) {
-				logger.error(e.toString());
-			}
-
-		}
-
-		public void readFireStationsFromJson(String content) {
-			try {
-				fireStations = objectMapper.readValue(content, new TypeReference<ArrayList<FireStation>>() {
-				});
-			} catch (JsonMappingException e) {
-				logger.error(e.toString());
-			} catch (JsonProcessingException e) {
-				logger.error(e.toString());
 			}
 		}
+		logger.error("Firestation not found :" + fireStation.getAddress());
+		return null;
+	}
 
-		public void readFromJson() {
-			readFireStationsFromJson(ManageRepositoriesFromFile.returnContentOfJSONNodeAsString(
-					ManageRepositoriesFromFile.returnContentOfFileAsString(path), "firestations"));
+	private void saveToJson() {
+		try {
+			JsonNode fileContent = objectMapper.readTree(ManageRepositoriesFromFile.returnContentOfFileAsString(path));
+			String contenu = objectMapper.writeValueAsString(fireStations);
+			JsonNode fireStationsAsJsonNode = objectMapper.readTree(contenu);
+			((ObjectNode) fileContent).set("firestations", fireStationsAsJsonNode);
+			FileWriter file = new FileWriter(path);
+			objectMapper.writeValue(file, fileContent);
+
+		} catch (JsonMappingException e) {
+			logger.error(e.toString());
+		} catch (JsonProcessingException e) {
+			logger.error(e.toString());
+		} catch (IOException e) {
+			logger.error(e.toString());
 		}
-	
+
+	}
+
+	public void readFireStationsFromJson(String content) {
+		try {
+			fireStations = objectMapper.readValue(content, new TypeReference<ArrayList<FireStation>>() {
+			});
+		} catch (JsonMappingException e) {
+			logger.error(e.toString());
+		} catch (JsonProcessingException e) {
+			logger.error(e.toString());
+		}
+	}
+
+	public void readFromJson() {
+		readFireStationsFromJson(ManageRepositoriesFromFile.returnContentOfJSONNodeAsString(
+				ManageRepositoriesFromFile.returnContentOfFileAsString(path), "firestations"));
+	}
+
 }

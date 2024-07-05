@@ -56,30 +56,28 @@ public class MedicalRecordRepository {
 	}
 
 	public void deleteByFirstAndLastName(String firstName, String lastName) {
-
 		Optional<MedicalRecord> medicalRecord = Optional.ofNullable(findByFirstAndLastName(firstName, lastName));
-
 		if (medicalRecord.isPresent()) {
 			MedicalRecord medicalRecordToDelete = medicalRecord.get();
-			logger.trace("suppression donnée médicale :" + medicalRecordToDelete.getFirstName());
+			logger.debug("deletion of medicalrecord :" + medicalRecordToDelete.getFirstName());
 			medicalRecords.remove(medicalRecordToDelete);
 			saveToJson();
 		} else {
-			logger.error("donnée médicale non trouvée: " + firstName + " " + lastName);
+			logger.error("Medical record not found: " + firstName + " " + lastName);
 		}
 
 	}
 
 	public MedicalRecord add(MedicalRecord medicalRecord) {
 		readFromJson();
-		logger.trace("ajout donnée médicale :" + medicalRecord.getFirstName());
+		logger.debug("Creation of medical record :" + medicalRecord.getFirstName());
 		medicalRecords.add(medicalRecord);
 		saveToJson();
 		return medicalRecords.get(medicalRecords.lastIndexOf(medicalRecord));
 	}
 
 	public MedicalRecord save(MedicalRecord medicalRecord) {
-		logger.trace("Modification donnée médicale :" + medicalRecord.getFirstName());
+		logger.debug("Update of medical record  :" + medicalRecord.getFirstName());
 		readFromJson();
 		for (MedicalRecord medRed : medicalRecords) {
 			if (medRed.getFirstName().equals(medicalRecord.getFirstName())
@@ -88,33 +86,24 @@ public class MedicalRecordRepository {
 				medRed.setMedications(medicalRecord.getMedications());
 				medRed.setAllergies(medicalRecord.getAllergies());
 				saveToJson();
-
-				logger.trace("donnée médicale trouvée :" + medRed.getFirstName());
+				logger.debug("medical record found :" + medRed.getFirstName());
 				return medRed;
-
 			}
 		}
-
-		logger.trace("donnée médicale pas trouvée :" + medicalRecord.getFirstName());
-
+		logger.error("Medical record not found :" + medicalRecord.getFirstName());
 		return null;
-
 	}
 
 	private void saveToJson() {
 		DateFormat df = new SimpleDateFormat("MM/dd/yyyy");
 		objectMapper.setDateFormat(df);
-		JsonNode fileContent;
 
 		try {
-			fileContent = objectMapper.readTree(ManageRepositoriesFromFile.returnContentOfFileAsString(path));
+			JsonNode fileContent = objectMapper.readTree(ManageRepositoriesFromFile.returnContentOfFileAsString(path));
 			String contenu = objectMapper.writeValueAsString(medicalRecords);
 			JsonNode medicalRecordsAsJsonNode = objectMapper.readTree(contenu);
-
 			((ObjectNode) fileContent).set("medicalrecords", medicalRecordsAsJsonNode);
-
 			FileWriter file = new FileWriter(path);
-
 			objectMapper.writeValue(file, fileContent);
 		} catch (JsonMappingException e) {
 			logger.error(e.toString());

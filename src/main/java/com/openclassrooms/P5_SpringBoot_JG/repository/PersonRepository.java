@@ -36,7 +36,7 @@ public class PersonRepository {
 	private static String path = "src/main/resources/data.json";
 
 	public ArrayList<Person> persons;
-	
+
 	private ObjectMapper objectMapper = new ObjectMapper();
 
 	public Person findByFirstAndLastName(String firstName, String lastName) {
@@ -55,30 +55,28 @@ public class PersonRepository {
 	}
 
 	public void deleteByFirstAndLastName(String firstName, String lastName) {
-
 		Optional<Person> person = Optional.ofNullable(findByFirstAndLastName(firstName, lastName));
-
 		if (person.isPresent()) {
 			Person personToDelete = person.get();
-			logger.trace("suppression personne :" + personToDelete.getFirstName());
+			logger.debug("deletion of person :" + personToDelete.getFirstName());
 			persons.remove(personToDelete);
 			saveToJson();
 		} else {
-			logger.error("Personne non trouvée: " + firstName + " " + lastName);
+			logger.error("Person not found: " + firstName + " " + lastName);
 		}
 
 	}
 
 	public Person add(Person person) {
 		readFromJson();
-		logger.trace("ajout personne :" + person.getFirstName());
+		logger.debug("creation of person :" + person.getFirstName());
 		persons.add(person);
 		saveToJson();
 		return persons.get(persons.lastIndexOf(person));
 	}
 
 	public Person save(Person p) {
-		logger.trace("Modification personne :" + p.getFirstName());
+		logger.debug("Update of person :" + p.getFirstName());
 		readFromJson();
 		for (Person person : persons) {
 			if (person.getFirstName().equals(p.getFirstName()) && person.getLastName().equals(p.getLastName())) {
@@ -88,32 +86,21 @@ public class PersonRepository {
 				person.setPhone(p.getPhone());
 				person.setZip(p.getZip());
 				saveToJson();
-
-				logger.trace("personne trouvée :" + person.getFirstName());
+				logger.debug("person found :" + person.getFirstName());
 				return person;
-
 			}
 		}
-
-		logger.trace("personne pas trouvée :" + p.getFirstName());
-
+		logger.error("person not found :" + p.getFirstName());
 		return null;
-
 	}
 
 	private void saveToJson() {
-
-		JsonNode fileContent;
-
 		try {
-			fileContent = objectMapper.readTree(ManageRepositoriesFromFile.returnContentOfFileAsString(path));
+			JsonNode fileContent = objectMapper.readTree(ManageRepositoriesFromFile.returnContentOfFileAsString(path));
 			String contenu = objectMapper.writeValueAsString(persons);
 			JsonNode personsAsJsonNode = objectMapper.readTree(contenu);
-
 			((ObjectNode) fileContent).set("persons", personsAsJsonNode);
-
 			FileWriter file = new FileWriter(path);
-
 			objectMapper.writeValue(file, fileContent);
 		} catch (JsonMappingException e) {
 			logger.error(e.toString());

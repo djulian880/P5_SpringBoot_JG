@@ -20,10 +20,6 @@ import com.openclassrooms.P5_SpringBoot_JG.controller.FireStationController;
 
 public class SafetyNetUtil {
 
-	private static ObjectMapper mapper = new ObjectMapper();
-	
-	private static Logger logger = LoggerFactory.getLogger(SafetyNetUtil.class);
-
 	public static double calculateAge(Date birthDate) {
 		Date currentTime = new Date();
 		currentTime.setTime(System.currentTimeMillis());
@@ -31,50 +27,6 @@ public class SafetyNetUtil {
 		return duration.toDays() / 365.0;
 	}
 
-	public static ArrayNode listSameFieldNameToJSON(String name, ArrayList<String> list) {
-		ArrayNode resultArray = mapper.createArrayNode();
-		for (String elem : list) {
-			ObjectNode currentNode = mapper.createObjectNode();
-			currentNode.put(name, elem);
-			resultArray.add(currentNode);
-		}
-		return resultArray;
-	}
-
-	public static ObjectNode mapToJSONNodeString(Map<String, String> values) {
-		ObjectNode resultNode = mapper.createObjectNode();
-		for (Map.Entry<String, String> m : values.entrySet()) {
-			resultNode.put(m.getKey(), m.getValue());
-		}
-		return resultNode;
-	}
-
-	public static ObjectNode mapToJSONNodeInt(Map<String, Integer> values) {
-		ObjectNode resultNode = mapper.createObjectNode();
-		for (Map.Entry<String, Integer> m : values.entrySet()) {
-			resultNode.put(m.getKey(), m.getValue());
-		}
-		return resultNode;
-	}
 	
-	public static JsonNode listToJSONString(List<String> list) {
-		JsonNode resultNode=mapper.createObjectNode();
-		try {
-			resultNode= mapper.readTree(mapper.writeValueAsString(list));
-		} catch (JsonMappingException e) {
-			logger.error(e.toString());
-		} catch (JsonProcessingException e) {
-			logger.error(e.toString());
-		}
-		return resultNode;
-	}
-	
-	public static ArrayNode getNewArrayNode() {
-		return mapper.createArrayNode();
-	}
-	
-	public static ObjectNode getNewObjectNode() {
-		return mapper.createObjectNode();
-	}
 
 }

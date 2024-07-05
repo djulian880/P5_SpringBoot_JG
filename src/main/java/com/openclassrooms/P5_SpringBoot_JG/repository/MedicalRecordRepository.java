@@ -18,6 +18,7 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.openclassrooms.P5_SpringBoot_JG.Util.JsonTools;
 import com.openclassrooms.P5_SpringBoot_JG.Util.ManageRepositoriesFromFile;
 import com.openclassrooms.P5_SpringBoot_JG.model.MedicalRecord;
 import lombok.Getter;
@@ -37,8 +38,6 @@ public class MedicalRecordRepository {
 	private static Logger logger = LoggerFactory.getLogger(PersonRepository.class);
 
 	private static String path = "src/main/resources/data.json";
-
-	private ObjectMapper objectMapper = new ObjectMapper();
 
 	public MedicalRecord findByFirstAndLastName(String firstName, String lastName) {
 		readFromJson();
@@ -95,6 +94,7 @@ public class MedicalRecordRepository {
 	}
 
 	private void saveToJson() {
+		ObjectMapper objectMapper = JsonTools.getObjectMapper();
 		DateFormat df = new SimpleDateFormat("MM/dd/yyyy");
 		objectMapper.setDateFormat(df);
 
@@ -116,6 +116,7 @@ public class MedicalRecordRepository {
 	}
 
 	public void readMedicalRecordsFromJson(String content) {
+		ObjectMapper objectMapper = JsonTools.getObjectMapper();
 		DateFormat df = new SimpleDateFormat("MM/dd/yyyy");
 		objectMapper.setDateFormat(df);
 		try {

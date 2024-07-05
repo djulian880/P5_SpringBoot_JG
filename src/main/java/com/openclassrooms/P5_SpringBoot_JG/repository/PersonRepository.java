@@ -16,6 +16,7 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.openclassrooms.P5_SpringBoot_JG.Util.JsonTools;
 import com.openclassrooms.P5_SpringBoot_JG.Util.ManageRepositoriesFromFile;
 import com.openclassrooms.P5_SpringBoot_JG.model.Person;
 
@@ -36,8 +37,6 @@ public class PersonRepository {
 	private static String path = "src/main/resources/data.json";
 
 	public ArrayList<Person> persons;
-
-	private ObjectMapper objectMapper = new ObjectMapper();
 
 	public Person findByFirstAndLastName(String firstName, String lastName) {
 		readFromJson();
@@ -96,6 +95,7 @@ public class PersonRepository {
 
 	private void saveToJson() {
 		try {
+			ObjectMapper objectMapper = JsonTools.getObjectMapper();
 			JsonNode fileContent = objectMapper.readTree(ManageRepositoriesFromFile.returnContentOfFileAsString(path));
 			String contenu = objectMapper.writeValueAsString(persons);
 			JsonNode personsAsJsonNode = objectMapper.readTree(contenu);
@@ -114,6 +114,7 @@ public class PersonRepository {
 
 	public void readPersonsFromJson(String content) {
 		try {
+			ObjectMapper objectMapper = JsonTools.getObjectMapper();
 			persons = objectMapper.readValue(content, new TypeReference<ArrayList<Person>>() {
 			});
 		} catch (JsonMappingException e) {

@@ -16,6 +16,7 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.openclassrooms.P5_SpringBoot_JG.Util.JsonTools;
 import com.openclassrooms.P5_SpringBoot_JG.Util.ManageRepositoriesFromFile;
 import com.openclassrooms.P5_SpringBoot_JG.model.FireStation;
 import lombok.Getter;
@@ -33,8 +34,6 @@ public class FireStationRepository {
 	private static Logger logger = LoggerFactory.getLogger(FireStationRepository.class);
 
 	private static String path = "src/main/resources/data.json";
-
-	private ObjectMapper objectMapper = new ObjectMapper();
 
 	public ArrayList<FireStation> fireStations;
 
@@ -93,6 +92,7 @@ public class FireStationRepository {
 
 	private void saveToJson() {
 		try {
+			 ObjectMapper objectMapper = JsonTools.getObjectMapper();
 			JsonNode fileContent = objectMapper.readTree(ManageRepositoriesFromFile.returnContentOfFileAsString(path));
 			String contenu = objectMapper.writeValueAsString(fireStations);
 			JsonNode fireStationsAsJsonNode = objectMapper.readTree(contenu);
@@ -112,6 +112,7 @@ public class FireStationRepository {
 
 	public void readFireStationsFromJson(String content) {
 		try {
+			ObjectMapper objectMapper = JsonTools.getObjectMapper();
 			fireStations = objectMapper.readValue(content, new TypeReference<ArrayList<FireStation>>() {
 			});
 		} catch (JsonMappingException e) {

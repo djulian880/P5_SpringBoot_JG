@@ -46,14 +46,16 @@ public class MedicalRecordController {
 	@PostMapping("/medicalRecord")
 	@ResponseStatus(HttpStatus.OK)
 	public MedicalRecord createMedicalRecord(@RequestBody MedicalRecord MedicalRecord) {
-		logger.trace("Controller: écriture medicalRecord :" + MedicalRecord.getFirstName());
+		logger.debug("Request for creation of medicalRecord :" + MedicalRecord.toString());
 
 		Optional<MedicalRecord> e = Optional.ofNullable(medicalRecordService.getMedicalRecord(MedicalRecord.getFirstName(), MedicalRecord.getLastName()));
 		if (e.isEmpty()) {
+			logger.info("Successful creation of medicalRecord :" + MedicalRecord.toString());
 			return medicalRecordService.addMedicalRecord(MedicalRecord);
+			
 		} else {
 			logger.error(
-					"Cette medicalRecord existe déjà dans la BDD:" + MedicalRecord.getFirstName() + " " + MedicalRecord.getLastName());
+					"medicalRecord already exists:" + MedicalRecord.toString());
 			throw new MedicalRecordAlreadyExistsException();
 		}
 	}
@@ -67,12 +69,11 @@ public class MedicalRecordController {
 	@PutMapping("/medicalRecord")
 	@ResponseStatus(HttpStatus.OK)
 	public MedicalRecord updateMedicalRecord(@RequestBody MedicalRecord MedicalRecord) {
-		logger.trace("Controller: update medicalRecordne :" + MedicalRecord.getFirstName());
+		logger.debug("Reguest for update of medicalRecord :" + MedicalRecord.toString());
 		Optional<MedicalRecord> medicalRecordFound = Optional
 				.ofNullable(medicalRecordService.getMedicalRecord(MedicalRecord.getFirstName(), MedicalRecord.getLastName()));
 		if (medicalRecordFound.isPresent()) {
 			MedicalRecord currentMedicalRecord = medicalRecordFound.get();
-			logger.trace("Mise à jour medicalRecordne trouvée :" + currentMedicalRecord.getFirstName());
 			Date birthDate = MedicalRecord.getBirthdate();
 			if (birthDate != null) {
 				currentMedicalRecord.setBirthdate(birthDate);
@@ -85,12 +86,12 @@ public class MedicalRecordController {
 			if (allergies != null) {
 				currentMedicalRecord.setAllergies(allergies);
 			}
-			
+			logger.info("Successful update of medicalRecord :" + currentMedicalRecord.toString());
 
 			return medicalRecordService.saveMedicalRecord(currentMedicalRecord);
 		} else {
 
-			logger.error("MedicalRecordne non touvée dans la BDD:" + MedicalRecord.getFirstName() + " " + MedicalRecord.getLastName());
+			logger.error("MedicalRecord not found : " + MedicalRecord.toString());
 			throw new MedicalRecordNotFoundException();
 
 		}
@@ -105,13 +106,14 @@ public class MedicalRecordController {
 	@DeleteMapping("/medicalRecord")
 	@ResponseStatus(HttpStatus.OK)
 	public void deleteMedicalRecord(@RequestBody MedicalRecord MedicalRecord) {
+		logger.debug("Request for deletion of medicalrecod :" + MedicalRecord.toString());
 		Optional<MedicalRecord> medicalRecordFound = Optional
 				.ofNullable(medicalRecordService.getMedicalRecord(MedicalRecord.getFirstName(), MedicalRecord.getLastName()));
 		if (medicalRecordFound.isPresent()) {
-			logger.trace("Suppression medicalRecordne :" + MedicalRecord.getFirstName() + " " + MedicalRecord.getLastName());
 			medicalRecordService.deleteMedicalRecord(MedicalRecord.getFirstName(), MedicalRecord.getLastName());
+			logger.info("Successful deletion of medicalRecord :" + MedicalRecord.toString());
 		} else {
-			logger.error("MedicalRecordne non touvée dans la BDD:" + MedicalRecord.getFirstName() + " " + MedicalRecord.getLastName());
+			logger.error("MedicalRecord not found:" + MedicalRecord.getFirstName() + " " + MedicalRecord.toString());
 			throw new MedicalRecordNotFoundException();
 		}
 

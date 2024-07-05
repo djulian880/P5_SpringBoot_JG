@@ -43,14 +43,15 @@ public class FireStationController {
 	@PostMapping("/firestation")
 	@ResponseStatus(HttpStatus.OK)
 	public FireStation createFireStation(@RequestBody FireStation FireStation) {
-		logger.trace("Controller: écriture fireStation :" + FireStation.getAddress());
-
+		logger.debug("Request for création of fireStation :" + FireStation.toString());
 		Optional<FireStation> e = Optional.ofNullable(fireStationService.getFireStation(FireStation.getAddress()));
+		
 		if (e.isEmpty()) {
+			logger.info("Successful création of firestation "+FireStation.toString());
 			return fireStationService.addFireStation(FireStation);
 		} else {
 			logger.error(
-					"Cette caserne de pompier  existe déjà dans la BDD:" + FireStation.getAddress());
+					"This firestation already exists :" + FireStation.getAddress());
 			throw new FireStationAlreadyExistsException();
 		}
 	}
@@ -64,21 +65,24 @@ public class FireStationController {
 	@PutMapping("/firestation")
 	@ResponseStatus(HttpStatus.OK)
 	public FireStation updateFireStation(@RequestBody FireStation FireStation) {
-		logger.trace("Controller: update fireStationne :" + FireStation.getAddress());
+		logger.debug("Request of update of fireStation :" + FireStation.toString());
 		Optional<FireStation> fireStationFound = Optional
 				.ofNullable(fireStationService.getFireStation(FireStation.getAddress()));
+		
 		if (fireStationFound.isPresent()) {
 			FireStation currentFireStation = fireStationFound.get();
-			logger.trace("Mise à jour caserne de pompier  trouvée :" + currentFireStation.getAddress());
+			logger.debug("Update of foun firestation :" + currentFireStation.getAddress());
 			Integer station = FireStation.getStation();
 			if (station != 0) {
+				logger.debug("Successful update of firestation :" + currentFireStation.getAddress());
 				currentFireStation.setStation(station);
 			}
 
 			return fireStationService.saveFireStation(currentFireStation);
+			
 		} else {
 
-			logger.error("caserne de pompier  non touvée dans la BDD:" + FireStation.getAddress());
+			logger.error("firestation not found: " + FireStation.toString());
 			throw new FireStationNotFoundException();
 
 		}
@@ -93,13 +97,14 @@ public class FireStationController {
 	@DeleteMapping("/firestation")
 	@ResponseStatus(HttpStatus.OK)
 	public void deleteFireStation(@RequestBody FireStation FireStation) {
+		logger.debug("Request for deletion of fireStation :" + FireStation.toString());
 		Optional<FireStation> fireStationFound = Optional
 				.ofNullable(fireStationService.getFireStation(FireStation.getAddress()));
 		if (fireStationFound.isPresent()) {
-			logger.trace("Suppression caserne de pompier :" + FireStation.getAddress());
 			fireStationService.deleteFireStation(FireStation.getAddress());
+			logger.info("Successful deletion of firestation :" + FireStation.getAddress());
 		} else {
-			logger.error("caserne de pompier non touvée dans la BDD:" + FireStation.getAddress());
+			logger.error("firestation not found:" + FireStation.toString());
 			throw new FireStationNotFoundException();
 		}
 

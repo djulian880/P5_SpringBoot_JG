@@ -41,18 +41,14 @@ public class SafetyNetController {
 //		moins) dans la zone desservie.
 	@GetMapping("/firestation")
 	ArrayNode returnPersonsBySation(@RequestParam(name = "stationNumber", required = true) Integer stationNumber) {
-
-		ObjectMapper mapper = new ObjectMapper();
-
-		ArrayNode resultArray = mapper.createArrayNode();
+		logger.debug("Request of data by firestationNumber :"+stationNumber);
+		ArrayNode resultArray = SafetyNetUtil.getNewArrayNode();
 		Integer countOfChildren = 0;
 		Integer countOfAdults = 0;
 		double age;
 		for (PersonDTO personDTO : personDTOMapper.getAllPersons()) {
-
 			if (personDTO.getStation() == stationNumber) {
-				
-				ObjectNode currentNode = mapper.createObjectNode();
+				ObjectNode currentNode = SafetyNetUtil.getNewObjectNode();
 				currentNode.put("FirstName", personDTO.getFirstName());
 				currentNode.put("LastName", personDTO.getLastName());
 				currentNode.put("address", personDTO.getAddress());
@@ -63,19 +59,15 @@ public class SafetyNetController {
 				} else {
 					countOfChildren++;
 				}
-
 				resultArray.add(currentNode);
-
 			}
-
 		}
-
-		HashMap<String, Integer> counts = new HashMap<String, Integer>();
-		counts.put("countOfChild", countOfChildren);
-		counts.put("countOfAdults", countOfAdults);
-
-		resultArray.add(SafetyNetUtil.mapToJSONNodeInt(counts));
-
+		
+		ObjectNode currentNode = SafetyNetUtil.getNewObjectNode();
+		currentNode.put("countOfChild", countOfChildren);
+		currentNode.put("countOfAdults", countOfAdults);
+		resultArray.add(currentNode);
+		logger.info("Succesful response of data by firestationNumber :"+stationNumber);
 		return resultArray;
 	}
 
@@ -86,24 +78,18 @@ public class SafetyNetController {
 //		d'enfant, cette url peut renvoyer une chaîne vide.
 	@GetMapping("/childAlert")
 	ArrayNode returnChildsByAddress(@RequestParam(name = "address", required = true) String address) {
-
-		ObjectMapper mapper = new ObjectMapper();
-
-		ArrayNode resultArray = mapper.createArrayNode();
+		logger.debug("Request of data for child by address :"+address);
+		ArrayNode resultArray = SafetyNetUtil.getNewArrayNode();
 		List<String> otherMembers=new ArrayList<String>();
-		
+	
 		for (PersonDTO personDTO : personDTOMapper.getAllPersons()) {
-			
-			
 			if (personDTO.getAddress().equals(address)) {
 				double age=SafetyNetUtil.calculateAge(personDTO.getBirthdate());
-				ObjectNode currentNode = mapper.createObjectNode();
-				
+				ObjectNode currentNode = SafetyNetUtil.getNewObjectNode();
 				if(age<=18) {
 					currentNode.put("FirstName", personDTO.getFirstName());
 					currentNode.put("LastName", personDTO.getLastName());
 					currentNode.put("age", Math.round(SafetyNetUtil.calculateAge(personDTO.getBirthdate())));
-
 					resultArray.add(currentNode);
 				}
 				else {
@@ -113,14 +99,11 @@ public class SafetyNetController {
 		}
 		
 		if (!resultArray.isEmpty()) {
-			ObjectNode currentNode = mapper.createObjectNode();
-		
+			ObjectNode currentNode = SafetyNetUtil.getNewObjectNode();
 			currentNode.set("otherMembers", SafetyNetUtil.listToJSONString(otherMembers));
-				
-		
 			resultArray.add(currentNode);
 		}
-		
+		logger.info("Successful response of data for child by address :"+address);
 		return resultArray;
 	}
 
@@ -130,13 +113,9 @@ public class SafetyNetController {
 //		d'urgence à des foyers spécifiques.
 	@GetMapping("/phoneAlert")
 	ArrayNode returnPhonesByStation(@RequestParam(name = "firestation", required = true) Integer stationNumber) {
-
+		logger.debug("Request of data for phone number by firestationNumber :"+stationNumber);
 		ArrayList<String> result = new ArrayList<>();
-		ObjectMapper mapper = new ObjectMapper();
-
-		ArrayNode resultArray = mapper.createArrayNode();
 		for (PersonDTO personDTO : personDTOMapper.getAllPersons()) {
-
 			if (personDTO.getStation() == stationNumber) {
 				String phone = personDTO.getPhone();
 				if (!result.contains(phone)) {
@@ -144,17 +123,15 @@ public class SafetyNetController {
 				}
 			}
 		}
-
+		
+		ArrayNode resultArray = SafetyNetUtil.getNewArrayNode();
 		for (String res : result) {
-
-			ObjectNode currentNode = mapper.createObjectNode();
+			ObjectNode currentNode = SafetyNetUtil.getNewObjectNode();
 			currentNode.put("phone", res);
-
 			resultArray.add(currentNode);
 		}
-
+		logger.info("Successful response of data for phone number by firestationNumber :"+stationNumber);
 		return resultArray;
-
 	}
 
 //		http://localhost:8080/fire?address=<address>
@@ -164,31 +141,21 @@ public class SafetyNetController {
 //		allergies) de chaque personne.
 	@GetMapping("/fire")
 	ArrayNode returnPersonsAndStationByAddress(@RequestParam(name = "address", required = true) String address) {
-
-		ObjectMapper mapper = new ObjectMapper();
-
-		ArrayNode resultArray = mapper.createArrayNode();
-
-		
-
+		logger.debug("Request of data for persons by address :"+address);
+		ArrayNode resultArray = SafetyNetUtil.getNewArrayNode();
 		for (PersonDTO personDTO : personDTOMapper.getAllPersons()) {
-
 			if (personDTO.getAddress().equals(address)) {
-				ObjectNode currentNode = mapper.createObjectNode();
+				ObjectNode currentNode = SafetyNetUtil.getNewObjectNode();
 				currentNode.put("LastName", personDTO.getLastName());
 				currentNode.put("phone", personDTO.getPhone());
 				currentNode.put("station", String.valueOf(personDTO.getStation()));
-
 				currentNode.set("allergies", SafetyNetUtil.listToJSONString(personDTO.getAllergies()));
 				currentNode.set("medications", SafetyNetUtil.listToJSONString(personDTO.getMedications()));
-				
 				currentNode.put("age", Math.round(SafetyNetUtil.calculateAge(personDTO.getBirthdate())));
-
 				resultArray.add(currentNode);
-
 			}
 		}
-
+		logger.info("Sueccessful response of data for persons by address :"+address);
 		return resultArray;
 	}
 
@@ -203,40 +170,30 @@ public class SafetyNetController {
 	@GetMapping("/flood/stations")
 	ArrayNode returnHomesAndPersonsMedicalRecordsByStationNumber(
 			@RequestParam(name = "stations", required = true) List<Integer> stationNumbers) {
-
-		ObjectMapper mapper = new ObjectMapper();
-
-		ArrayNode resultArray = mapper.createArrayNode();
-
-		ObjectNode currentNode = mapper.createObjectNode();
-		
+		logger.debug("Request of data for address by stationNumbers :"+stationNumbers);
+		ArrayNode resultArray = SafetyNetUtil.getNewArrayNode();
 		Map <String,List<PersonDTO>> listPersons=new HashMap <String,List<PersonDTO>>();
-		
+
 		for (PersonDTO personDTO : personDTOMapper.getAllPersons()) {
-
 			if (stationNumbers.contains(personDTO.getStation())) {
-
 				listPersons.computeIfAbsent(personDTO.getAddress(), k -> new ArrayList<>()).add(personDTO);
 			}
 		}
-
 		  
 		for (Map.Entry<String, List<PersonDTO>> entry : listPersons.entrySet()) {
 			for (PersonDTO personDTO : entry.getValue()) {
+				ObjectNode currentNode = SafetyNetUtil.getNewObjectNode();
 				currentNode.put("address", personDTO.getAddress());
 				currentNode.put("LastName", personDTO.getLastName());
 				currentNode.put("phone", personDTO.getPhone());
-
 				currentNode.set("allergies", SafetyNetUtil.listToJSONString(personDTO.getAllergies()));
 				currentNode.set("medications", SafetyNetUtil.listToJSONString(personDTO.getMedications()));
-
-
 				currentNode.put("age", Math.round(SafetyNetUtil.calculateAge(personDTO.getBirthdate())));
 				resultArray.add(currentNode);
 			}
         }
+		logger.info("Successful response of data for address by stationNumbers :"+stationNumbers);
 		return resultArray;
-
 	}
 
 	// http://localhost:8080/personInfolastName=<lastName>
@@ -248,39 +205,28 @@ public class SafetyNetController {
 
 	@GetMapping("/")
 	ArrayNode returnPersonsByLastName(@RequestParam(name = "personInfolastName", required = true) String lastName) {
-
-		ObjectMapper mapper = new ObjectMapper();
-
-		ArrayNode resultArray = mapper.createArrayNode();
-
-		
-		//JsonNode jNode;
+		logger.debug("Request of data for address by lastName :"+lastName);
+		ArrayNode resultArray = SafetyNetUtil.getNewArrayNode();
 		for (PersonDTO personDTO : personDTOMapper.getAllPersons()) {
-
 			if (personDTO.getLastName().equals(lastName)) {
-				ObjectNode currentNode = mapper.createObjectNode();
+				ObjectNode currentNode = SafetyNetUtil.getNewObjectNode();
 				currentNode.put("LastName", personDTO.getLastName());
 				currentNode.put("address", personDTO.getAddress());
 				currentNode.put("email", personDTO.getEmail());
-
 				currentNode.set("allergies", SafetyNetUtil.listToJSONString(personDTO.getAllergies()));
 				currentNode.set("medications", SafetyNetUtil.listToJSONString(personDTO.getMedications()));
-
-
 				currentNode.put("age", Math.round(SafetyNetUtil.calculateAge(personDTO.getBirthdate())));
-
 				resultArray.add(currentNode);
-
 			}
 		}
-
+		logger.info("Successful response of data for address by lastName :"+lastName);
 		return resultArray;
 	}
 
 	// Cette url doit retourner les adresses mail de tous les habitants de la ville.
 	@GetMapping("/communityEmail")
 	ArrayNode returnCommunityEmails(@RequestParam(name = "city", required = true) String city) {
-
+		logger.debug("Request of data for mail by city :"+city);
 		ArrayList<String> result = new ArrayList<>();
 		for (PersonDTO personDTO : personDTOMapper.getAllPersons()) {
 			if (personDTO.getCity().equals(city)) {
@@ -290,7 +236,7 @@ public class SafetyNetController {
 				}
 			}
 		}
-
+		logger.info("Successful response of data for mail by city :"+city);
 		return SafetyNetUtil.listSameFieldNameToJSON("email",result);
 	}
 

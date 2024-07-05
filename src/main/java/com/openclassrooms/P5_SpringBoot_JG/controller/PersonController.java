@@ -43,14 +43,15 @@ public class PersonController {
 	@PostMapping("/person")
 	@ResponseStatus(HttpStatus.OK)
 	public Person createPerson(@RequestBody Person Person) {
-		logger.trace("Controller: écriture personne :" + Person.getFirstName());
+		logger.debug("Request of creation of person :" + Person.toString());
 
 		Optional<Person> e = Optional.ofNullable(personService.getPerson(Person.getFirstName(), Person.getLastName()));
 		if (e.isEmpty()) {
+			logger.info("Successful creation of person :" + Person.toString());
 			return personService.addPerson(Person);
 		} else {
 			logger.error(
-					"Cette personne existe déjà dans la BDD:" + Person.getFirstName() + " " + Person.getLastName());
+					"Person already exists :" + Person.toString());
 			throw new PersonAlreadyExistsException();
 		}
 	}
@@ -64,12 +65,12 @@ public class PersonController {
 	@PutMapping("/person")
 	@ResponseStatus(HttpStatus.OK)
 	public Person updatePerson(@RequestBody Person Person) {
-		logger.trace("Controller: update personne :" + Person.getFirstName());
+		logger.debug("Request of update of person :" + Person.toString());
 		Optional<Person> personFound = Optional
 				.ofNullable(personService.getPerson(Person.getFirstName(), Person.getLastName()));
 		if (personFound.isPresent()) {
 			Person currentPerson = personFound.get();
-			logger.trace("Mise à jour personne trouvée :" + currentPerson.getFirstName());
+			
 			String address = Person.getAddress();
 			if (address != null) {
 				currentPerson.setAddress(address);
@@ -90,10 +91,11 @@ public class PersonController {
 			if (email != null) {
 				currentPerson.setEmail(email);
 			}
+			logger.info("Successful updage of person :" + currentPerson.toString());
 			return personService.savePerson(currentPerson);
 		} else {
 
-			logger.error("Personne non touvée dans la BDD:" + Person.getFirstName() + " " + Person.getLastName());
+			logger.error("Person not found :" + Person.toString());
 			throw new PersonNotFoundException();
 
 		}
@@ -108,13 +110,15 @@ public class PersonController {
 	@DeleteMapping("/person")
 	@ResponseStatus(HttpStatus.OK)
 	public void deletePerson(@RequestBody Person Person) {
+		logger.debug("Request for deletion fof person :" + Person.toString());
 		Optional<Person> personFound = Optional
 				.ofNullable(personService.getPerson(Person.getFirstName(), Person.getLastName()));
 		if (personFound.isPresent()) {
-			logger.trace("Suppression personne :" + Person.getFirstName() + " " + Person.getLastName());
+			
 			personService.deletePerson(Person.getFirstName(), Person.getLastName());
+			logger.trace("Successful deletion of person :" + Person.toString());
 		} else {
-			logger.error("Personne non touvée dans la BDD:" + Person.getFirstName() + " " + Person.getLastName());
+			logger.error("Person not found :" + Person.toString());
 			throw new PersonNotFoundException();
 		}
 

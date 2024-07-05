@@ -26,5 +26,6 @@ public class PersonDTO {
 	public String email;
 	public String address;
 	public int station;
+	public double age;
 
 }

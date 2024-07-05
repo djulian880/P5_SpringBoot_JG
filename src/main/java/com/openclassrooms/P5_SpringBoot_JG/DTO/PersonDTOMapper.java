@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.openclassrooms.P5_SpringBoot_JG.Util.SafetyNetUtil;
 import com.openclassrooms.P5_SpringBoot_JG.model.FireStation;
 import com.openclassrooms.P5_SpringBoot_JG.model.MedicalRecord;
 import com.openclassrooms.P5_SpringBoot_JG.model.Person;
@@ -54,6 +55,7 @@ public class PersonDTOMapper {
 			currentPersonDTO.setBirthdate(medicalRecord.getBirthdate());
 			currentPersonDTO.setMedications(medicalRecord.getMedications());
 			currentPersonDTO.setAllergies(medicalRecord.getAllergies());
+			currentPersonDTO.setAge(SafetyNetUtil.calculateAge(currentPersonDTO.getBirthdate()));
 			personsDto.add(currentPersonDTO);
 		}
 		return personsDto;

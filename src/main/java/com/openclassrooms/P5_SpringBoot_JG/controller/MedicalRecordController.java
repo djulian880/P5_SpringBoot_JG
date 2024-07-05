@@ -48,14 +48,14 @@ public class MedicalRecordController {
 	public MedicalRecord createMedicalRecord(@RequestBody MedicalRecord MedicalRecord) {
 		logger.debug("Request for creation of medicalRecord :" + MedicalRecord.toString());
 
-		Optional<MedicalRecord> e = Optional.ofNullable(medicalRecordService.getMedicalRecord(MedicalRecord.getFirstName(), MedicalRecord.getLastName()));
+		Optional<MedicalRecord> e = Optional.ofNullable(
+				medicalRecordService.getMedicalRecord(MedicalRecord.getFirstName(), MedicalRecord.getLastName()));
 		if (e.isEmpty()) {
 			logger.info("Successful creation of medicalRecord :" + MedicalRecord.toString());
 			return medicalRecordService.addMedicalRecord(MedicalRecord);
-			
+
 		} else {
-			logger.error(
-					"medicalRecord already exists:" + MedicalRecord.toString());
+			logger.error("medicalRecord already exists:" + MedicalRecord.toString());
 			throw new MedicalRecordAlreadyExistsException();
 		}
 	}
@@ -70,15 +70,15 @@ public class MedicalRecordController {
 	@ResponseStatus(HttpStatus.OK)
 	public MedicalRecord updateMedicalRecord(@RequestBody MedicalRecord MedicalRecord) {
 		logger.debug("Reguest for update of medicalRecord :" + MedicalRecord.toString());
-		Optional<MedicalRecord> medicalRecordFound = Optional
-				.ofNullable(medicalRecordService.getMedicalRecord(MedicalRecord.getFirstName(), MedicalRecord.getLastName()));
+		Optional<MedicalRecord> medicalRecordFound = Optional.ofNullable(
+				medicalRecordService.getMedicalRecord(MedicalRecord.getFirstName(), MedicalRecord.getLastName()));
 		if (medicalRecordFound.isPresent()) {
 			MedicalRecord currentMedicalRecord = medicalRecordFound.get();
 			Date birthDate = MedicalRecord.getBirthdate();
 			if (birthDate != null) {
 				currentMedicalRecord.setBirthdate(birthDate);
 			}
-			List<String> medications=MedicalRecord.getMedications();
+			List<String> medications = MedicalRecord.getMedications();
 			if (medications != null) {
 				currentMedicalRecord.setMedications(medications);
 			}
@@ -107,8 +107,8 @@ public class MedicalRecordController {
 	@ResponseStatus(HttpStatus.OK)
 	public void deleteMedicalRecord(@RequestBody MedicalRecord MedicalRecord) {
 		logger.debug("Request for deletion of medicalrecod :" + MedicalRecord.toString());
-		Optional<MedicalRecord> medicalRecordFound = Optional
-				.ofNullable(medicalRecordService.getMedicalRecord(MedicalRecord.getFirstName(), MedicalRecord.getLastName()));
+		Optional<MedicalRecord> medicalRecordFound = Optional.ofNullable(
+				medicalRecordService.getMedicalRecord(MedicalRecord.getFirstName(), MedicalRecord.getLastName()));
 		if (medicalRecordFound.isPresent()) {
 			medicalRecordService.deleteMedicalRecord(MedicalRecord.getFirstName(), MedicalRecord.getLastName());
 			logger.info("Successful deletion of medicalRecord :" + MedicalRecord.toString());

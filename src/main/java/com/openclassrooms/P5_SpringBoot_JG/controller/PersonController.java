@@ -50,8 +50,7 @@ public class PersonController {
 			logger.info("Successful creation of person :" + Person.toString());
 			return personService.addPerson(Person);
 		} else {
-			logger.error(
-					"Person already exists :" + Person.toString());
+			logger.error("Person already exists :" + Person.toString());
 			throw new PersonAlreadyExistsException();
 		}
 	}
@@ -70,7 +69,7 @@ public class PersonController {
 				.ofNullable(personService.getPerson(Person.getFirstName(), Person.getLastName()));
 		if (personFound.isPresent()) {
 			Person currentPerson = personFound.get();
-			
+
 			String address = Person.getAddress();
 			if (address != null) {
 				currentPerson.setAddress(address);
@@ -114,7 +113,7 @@ public class PersonController {
 		Optional<Person> personFound = Optional
 				.ofNullable(personService.getPerson(Person.getFirstName(), Person.getLastName()));
 		if (personFound.isPresent()) {
-			
+
 			personService.deletePerson(Person.getFirstName(), Person.getLastName());
 			logger.trace("Successful deletion of person :" + Person.toString());
 		} else {

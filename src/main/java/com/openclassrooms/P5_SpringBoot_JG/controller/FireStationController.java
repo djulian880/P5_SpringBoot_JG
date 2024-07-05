@@ -45,13 +45,12 @@ public class FireStationController {
 	public FireStation createFireStation(@RequestBody FireStation FireStation) {
 		logger.debug("Request for création of fireStation :" + FireStation.toString());
 		Optional<FireStation> e = Optional.ofNullable(fireStationService.getFireStation(FireStation.getAddress()));
-		
+
 		if (e.isEmpty()) {
-			logger.info("Successful création of firestation "+FireStation.toString());
+			logger.info("Successful création of firestation " + FireStation.toString());
 			return fireStationService.addFireStation(FireStation);
 		} else {
-			logger.error(
-					"This firestation already exists :" + FireStation.getAddress());
+			logger.error("This firestation already exists :" + FireStation.getAddress());
 			throw new FireStationAlreadyExistsException();
 		}
 	}
@@ -68,7 +67,7 @@ public class FireStationController {
 		logger.debug("Request of update of fireStation :" + FireStation.toString());
 		Optional<FireStation> fireStationFound = Optional
 				.ofNullable(fireStationService.getFireStation(FireStation.getAddress()));
-		
+
 		if (fireStationFound.isPresent()) {
 			FireStation currentFireStation = fireStationFound.get();
 			logger.debug("Update of foun firestation :" + currentFireStation.getAddress());
@@ -79,7 +78,7 @@ public class FireStationController {
 			}
 
 			return fireStationService.saveFireStation(currentFireStation);
-			
+
 		} else {
 
 			logger.error("firestation not found: " + FireStation.toString());

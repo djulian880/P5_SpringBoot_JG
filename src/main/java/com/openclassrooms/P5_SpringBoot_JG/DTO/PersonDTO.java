@@ -1,4 +1,4 @@
-package com.openclassrooms.P5_SpringBoot_JG.model;
+package com.openclassrooms.P5_SpringBoot_JG.DTO;
 
 import java.util.Date;
 import java.util.List;

@@ -115,7 +115,7 @@ public class PersonController {
 		if (personFound.isPresent()) {
 
 			personService.deletePerson(Person.getFirstName(), Person.getLastName());
-			logger.trace("Successful deletion of person :" + Person.toString());
+			logger.info("Successful deletion of person :" + Person.toString());
 		} else {
 			logger.error("Person not found :" + Person.toString());
 			throw new PersonNotFoundException();

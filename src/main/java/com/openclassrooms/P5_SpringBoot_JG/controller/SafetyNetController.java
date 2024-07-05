@@ -19,8 +19,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.openclassrooms.P5_SpringBoot_JG.model.PersonDTO;
-import com.openclassrooms.P5_SpringBoot_JG.service.PersonDTOMapper;
+import com.openclassrooms.P5_SpringBoot_JG.DTO.PersonDTO;
+import com.openclassrooms.P5_SpringBoot_JG.DTO.PersonDTOMapper;
 import com.openclassrooms.P5_SpringBoot_JG.Util.ManageRepositoriesFromFile;
 import com.openclassrooms.P5_SpringBoot_JG.Util.SafetyNetUtil;
 
@@ -42,9 +42,13 @@ public class SafetyNetController {
 	 */	
 
 	@GetMapping("/firestation")
-	ArrayNode returnPersonsBySation(@RequestParam(name = "stationNumber", required = true) Integer stationNumber) {
+	ObjectNode returnPersonsByStation(@RequestParam(name = "stationNumber", required = true) Integer stationNumber) {
 		logger.debug("Request of data by firestationNumber :" + stationNumber);
+		
+		ObjectNode resultNode = SafetyNetUtil.getNewObjectNode();
+		
 		ArrayNode resultArray = SafetyNetUtil.getNewArrayNode();
+		ArrayNode dataArray = SafetyNetUtil.getNewArrayNode();
 		Integer countOfChildren = 0;
 		Integer countOfAdults = 0;
 		double age;
@@ -61,16 +65,27 @@ public class SafetyNetController {
 				} else {
 					countOfChildren++;
 				}
-				resultArray.add(currentNode);
+				dataArray.add(currentNode);
 			}
 		}
-
+		
 		ObjectNode currentNode = SafetyNetUtil.getNewObjectNode();
-		currentNode.put("countOfChild", countOfChildren);
+		currentNode.put("countOfChildren", countOfChildren);
+		resultArray.add(currentNode);
+		currentNode = SafetyNetUtil.getNewObjectNode();
 		currentNode.put("countOfAdults", countOfAdults);
 		resultArray.add(currentNode);
+		currentNode = SafetyNetUtil.getNewObjectNode();
+		currentNode.set("DATA",dataArray);
+		resultArray.add(currentNode);
+		
 		logger.info("Succesful response of data by firestationNumber :" + stationNumber);
-		return resultArray;
+		//return resultArray;
+		
+		resultNode.put("countOfChildren", countOfChildren);
+		resultNode.put("countOfAdults", countOfAdults);
+		resultNode.set("DATA",dataArray);
+		return resultNode;
 	}
 
 

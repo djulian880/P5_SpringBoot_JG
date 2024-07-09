@@ -85,16 +85,5 @@ public class ManageRepositoriesFromFileTests {
 		
     }
 	
-/*
-	@Test
-    public void testformatDateFromString(){
-		
-		
-		String dateString="03/18/1984";
-		LocalDate date = LocalDate.of(1984, 03, 18);
 
-		
-		assertEquals(ManageRepositoriesFromFile.formatDateFromString(dateString),date);
-    }*/
-	
 }

@@ -154,7 +154,7 @@ public class SafetyNetService {
 		}
 
 		// Convert this list in JSON
-		ArrayNode dataArray = JsonTools.convertArrayStringToJsonNode(resultPhones);
+		ArrayNode dataArray = JsonTools.convertArrayStringToJsonNode(resultPhones,"phone");
 		resultNode.set("DATA", dataArray);
 		logger.info("Successful response of data for phone number by firestationNumber :" + stationNumber);
 		return resultNode;
@@ -241,7 +241,7 @@ public class SafetyNetService {
 			}
 		}
 		// Convert this list in JSON
-		ArrayNode dataArray = JsonTools.convertArrayStringToJsonNode(resultEmails);
+		ArrayNode dataArray = JsonTools.convertArrayStringToJsonNode(resultEmails,"email");
 		resultNode.set("DATA", dataArray);
 		logger.info("Successful response of data for mail by city :" + city);
 		return resultNode;

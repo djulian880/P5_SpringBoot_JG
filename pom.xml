@@ -105,6 +105,13 @@
 					</execution>
 				</executions>
 			</plugin>
+			<plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <!-- Configuration optionnelle -->
+                </configuration>
+            </plugin>
 		</plugins>
 	</build>
 

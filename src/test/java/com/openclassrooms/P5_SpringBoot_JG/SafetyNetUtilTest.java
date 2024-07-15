@@ -1,24 +1,23 @@
 package com.openclassrooms.P5_SpringBoot_JG;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
+import org.junit.jupiter.api.Test;
+import static org.assertj.core.api.Assertions.assertThat;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
 import java.util.Date;
-
-import org.junit.Test;
-
 import com.openclassrooms.P5_SpringBoot_JG.Util.SafetyNetUtil;
+
 
 public class SafetyNetUtilTest {
 
 	@Test
 	public void TestcalculateAge() {
-		
-		//Date currentTime = new Date(System.currentTimeMillis());
-		Date birthDate=new Date(System.currentTimeMillis() - 12*365*24*60 * 60 * 1000);
-		
-		
-		assertEquals(SafetyNetUtil.calculateAge(birthDate), 12);
-		System.out.println("Test");
+		LocalDate currentDate = LocalDate.now();
+		LocalDate dateMinus12Years = currentDate.minus(12, ChronoUnit.YEARS);
+		Instant instant = dateMinus12Years.atStartOfDay(ZoneId.systemDefault()).toInstant();
+		assertThat(SafetyNetUtil.calculateAge(Date.from(instant))).isBetween(11.99, 12.01);
 	}
-	
+
 }

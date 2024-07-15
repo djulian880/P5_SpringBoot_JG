@@ -70,11 +70,11 @@ public class JsonTools {
 		return mapper;
 	}
 
-	public static ArrayNode convertArrayStringToJsonNode(ArrayList<String> array) {
+	public static ArrayNode convertArrayStringToJsonNode(ArrayList<String> array,String name) {
 		ArrayNode resultArray = getNewArrayNode();
 		for (String res : array) {
 			ObjectNode currentNode = JsonTools.getNewObjectNode();
-			currentNode.put("email", res);
+			currentNode.put(name, res);
 			resultArray.add(currentNode);
 		}
 		return resultArray;

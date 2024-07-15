@@ -92,6 +92,27 @@ public class JsonToolsTest {
 		assertEquals(resultNode.get(2).asText(), "Test3");
 	}
 	
+	@Test
+	public void TestconvertArrayStringToJsonNode() {
+		ArrayList<String> list=new ArrayList<String>();
+		list.add("Test1");
+		list.add("Test2");
+		list.add("Test3");
+		
+		ArrayNode resultArray  = JsonTools.getNewArrayNode();
+		ObjectNode currentNode = JsonTools.getNewObjectNode();
+		currentNode.put("testname", "Test1");
+		resultArray.add(currentNode);
+		 currentNode = JsonTools.getNewObjectNode();
+		currentNode.put("testname", "Test2");
+		resultArray.add(currentNode);
+		 currentNode = JsonTools.getNewObjectNode();
+		currentNode.put("testname", "Test3");
+		resultArray.add(currentNode);
+		
+		assertEquals(resultArray,JsonTools.convertArrayStringToJsonNode(list,"testname"));
+	}
 	
+
 	
 }

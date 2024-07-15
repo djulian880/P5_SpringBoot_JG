@@ -17,7 +17,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.openclassrooms.P5_SpringBoot_JG.Util.JsonTools;
-import com.openclassrooms.P5_SpringBoot_JG.Util.ManageRepositoriesFromFile;
+import com.openclassrooms.P5_SpringBoot_JG.Util.ManageJsonFile;
 import com.openclassrooms.P5_SpringBoot_JG.model.FireStation;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -93,7 +93,7 @@ public class FireStationRepository {
 	private void saveToJson() {
 		try {
 			 ObjectMapper objectMapper = JsonTools.getObjectMapper();
-			JsonNode fileContent = objectMapper.readTree(ManageRepositoriesFromFile.returnContentOfFileAsString(path));
+			JsonNode fileContent = objectMapper.readTree(ManageJsonFile.returnContentOfFileAsString(path));
 			String contenu = objectMapper.writeValueAsString(fireStations);
 			JsonNode fireStationsAsJsonNode = objectMapper.readTree(contenu);
 			((ObjectNode) fileContent).set("firestations", fireStationsAsJsonNode);
@@ -123,8 +123,8 @@ public class FireStationRepository {
 	}
 
 	public void readFromJson() {
-		readFireStationsFromJson(ManageRepositoriesFromFile.returnContentOfJSONNodeAsString(
-				ManageRepositoriesFromFile.returnContentOfFileAsString(path), "firestations"));
+		readFireStationsFromJson(ManageJsonFile.returnContentOfJSONNodeAsString(
+				ManageJsonFile.returnContentOfFileAsString(path), "firestations"));
 	}
 
 }

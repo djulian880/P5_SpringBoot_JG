@@ -1,4 +1,4 @@
-package com.openclassrooms.P5_SpringBoot_JG;
+package com.openclassrooms.P5_SpringBoot_JG.repository;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
@@ -15,7 +15,7 @@ import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import com.openclassrooms.P5_SpringBoot_JG.Util.ManageRepositoriesFromFile;
+import com.openclassrooms.P5_SpringBoot_JG.Util.ManageJsonFile;
 import com.openclassrooms.P5_SpringBoot_JG.model.MedicalRecord;
 import com.openclassrooms.P5_SpringBoot_JG.repository.MedicalRecordRepository;
 
@@ -42,8 +42,8 @@ public class MedicalRecordRepositoryTest {
 		mockMedicalRecord.setLastName("TestLastName");
 		MedicalRecord result = medicalRecordRepository.add(mockMedicalRecord);
 		assertThat(mockMedicalRecord, is(result));
-		String fileResult = ManageRepositoriesFromFile.returnContentOfJSONNodeAsString(
-				ManageRepositoriesFromFile.returnContentOfFileAsString(path), "medicalrecords");
+		String fileResult = ManageJsonFile.returnContentOfJSONNodeAsString(
+				ManageJsonFile.returnContentOfFileAsString(path), "medicalrecords");
 		assertThat(fileResult, containsString("TestFirstName"));
 	}
 
@@ -62,8 +62,8 @@ public class MedicalRecordRepositoryTest {
 		MedicalRecord result = medicalRecordRepository.save(mockMedicalRecord);
 
 		assertThat(mockMedicalRecord, is(result));
-		String fileResult = ManageRepositoriesFromFile.returnContentOfJSONNodeAsString(
-				ManageRepositoriesFromFile.returnContentOfFileAsString(path), "medicalrecords");
+		String fileResult = ManageJsonFile.returnContentOfJSONNodeAsString(
+				ManageJsonFile.returnContentOfFileAsString(path), "medicalrecords");
 		assertThat(fileResult, containsString("medictest1:5000mg"));
 
 	}
@@ -75,8 +75,8 @@ public class MedicalRecordRepositoryTest {
 		mockMedicalRecord.setFirstName("TestFirstName");
 		mockMedicalRecord.setLastName("TestLastName");
 		medicalRecordRepository.deleteByFirstAndLastName("TestFirstName", "TestLastName");
-		String fileResult = ManageRepositoriesFromFile.returnContentOfJSONNodeAsString(
-				ManageRepositoriesFromFile.returnContentOfFileAsString(path), "medicalrecords");
+		String fileResult = ManageJsonFile.returnContentOfJSONNodeAsString(
+				ManageJsonFile.returnContentOfFileAsString(path), "medicalrecords");
 		assertThat(fileResult, not(containsString("medictest1:5000mg")));
 	}
 

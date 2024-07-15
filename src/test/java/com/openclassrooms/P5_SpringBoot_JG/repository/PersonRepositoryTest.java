@@ -1,4 +1,4 @@
-package com.openclassrooms.P5_SpringBoot_JG;
+package com.openclassrooms.P5_SpringBoot_JG.repository;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
@@ -14,7 +14,7 @@ import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import com.openclassrooms.P5_SpringBoot_JG.Util.ManageRepositoriesFromFile;
+import com.openclassrooms.P5_SpringBoot_JG.Util.ManageJsonFile;
 import com.openclassrooms.P5_SpringBoot_JG.model.Person;
 import com.openclassrooms.P5_SpringBoot_JG.repository.PersonRepository;
 
@@ -40,8 +40,8 @@ public class PersonRepositoryTest {
 
 		Person result = personRepository.add(mockPerson);
 		assertThat(mockPerson, is(result));
-		String fileResult = ManageRepositoriesFromFile.returnContentOfJSONNodeAsString(
-				ManageRepositoriesFromFile.returnContentOfFileAsString(path), "persons");
+		String fileResult = ManageJsonFile.returnContentOfJSONNodeAsString(
+				ManageJsonFile.returnContentOfFileAsString(path), "persons");
 		assertThat(fileResult, containsString("TestFirstName"));
 	}
 
@@ -59,8 +59,8 @@ public class PersonRepositoryTest {
 
 		Person result = personRepository.save(mockPerson);
 		assertThat(mockPerson, is(result));
-		String fileResult = ManageRepositoriesFromFile.returnContentOfJSONNodeAsString(
-				ManageRepositoriesFromFile.returnContentOfFileAsString(path), "persons");
+		String fileResult = ManageJsonFile.returnContentOfJSONNodeAsString(
+				ManageJsonFile.returnContentOfFileAsString(path), "persons");
 		assertThat(fileResult, containsString("TestCityUpdated"));
 	}
 
@@ -71,8 +71,8 @@ public class PersonRepositoryTest {
 		mockPerson.setFirstName("TestFirstName");
 		mockPerson.setLastName("TestLastName");
 		personRepository.deleteByFirstAndLastName("TestFirstName", "TestLastName");
-		String fileResult = ManageRepositoriesFromFile.returnContentOfJSONNodeAsString(
-				ManageRepositoriesFromFile.returnContentOfFileAsString(path), "persons");
+		String fileResult = ManageJsonFile.returnContentOfJSONNodeAsString(
+				ManageJsonFile.returnContentOfFileAsString(path), "persons");
 		assertThat(fileResult, not(containsString("TestCityUpdated")));
 	}
 

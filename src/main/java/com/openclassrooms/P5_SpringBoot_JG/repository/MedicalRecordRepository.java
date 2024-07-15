@@ -19,7 +19,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.openclassrooms.P5_SpringBoot_JG.Util.JsonTools;
-import com.openclassrooms.P5_SpringBoot_JG.Util.ManageRepositoriesFromFile;
+import com.openclassrooms.P5_SpringBoot_JG.Util.ManageJsonFile;
 import com.openclassrooms.P5_SpringBoot_JG.model.MedicalRecord;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -99,7 +99,7 @@ public class MedicalRecordRepository {
 		objectMapper.setDateFormat(df);
 
 		try {
-			JsonNode fileContent = objectMapper.readTree(ManageRepositoriesFromFile.returnContentOfFileAsString(path));
+			JsonNode fileContent = objectMapper.readTree(ManageJsonFile.returnContentOfFileAsString(path));
 			String contenu = objectMapper.writeValueAsString(medicalRecords);
 			JsonNode medicalRecordsAsJsonNode = objectMapper.readTree(contenu);
 			((ObjectNode) fileContent).set("medicalrecords", medicalRecordsAsJsonNode);
@@ -130,8 +130,8 @@ public class MedicalRecordRepository {
 	}
 
 	public void readFromJson() {
-		readMedicalRecordsFromJson(ManageRepositoriesFromFile.returnContentOfJSONNodeAsString(
-				ManageRepositoriesFromFile.returnContentOfFileAsString(path), "medicalrecords"));
+		readMedicalRecordsFromJson(ManageJsonFile.returnContentOfJSONNodeAsString(
+				ManageJsonFile.returnContentOfFileAsString(path), "medicalrecords"));
 	}
 
 }

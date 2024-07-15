@@ -1,4 +1,4 @@
-package com.openclassrooms.P5_SpringBoot_JG;
+package com.openclassrooms.P5_SpringBoot_JG.model;
 
 import org.junit.jupiter.api.Test;
 

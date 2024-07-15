@@ -17,7 +17,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.openclassrooms.P5_SpringBoot_JG.Util.JsonTools;
-import com.openclassrooms.P5_SpringBoot_JG.Util.ManageRepositoriesFromFile;
+import com.openclassrooms.P5_SpringBoot_JG.Util.ManageJsonFile;
 import com.openclassrooms.P5_SpringBoot_JG.model.Person;
 
 import lombok.Getter;
@@ -96,7 +96,7 @@ public class PersonRepository {
 	private void saveToJson() {
 		try {
 			ObjectMapper objectMapper = JsonTools.getObjectMapper();
-			JsonNode fileContent = objectMapper.readTree(ManageRepositoriesFromFile.returnContentOfFileAsString(path));
+			JsonNode fileContent = objectMapper.readTree(ManageJsonFile.returnContentOfFileAsString(path));
 			String contenu = objectMapper.writeValueAsString(persons);
 			JsonNode personsAsJsonNode = objectMapper.readTree(contenu);
 			((ObjectNode) fileContent).set("persons", personsAsJsonNode);
@@ -125,7 +125,7 @@ public class PersonRepository {
 	}
 
 	public void readFromJson() {
-		readPersonsFromJson(ManageRepositoriesFromFile.returnContentOfJSONNodeAsString(
-				ManageRepositoriesFromFile.returnContentOfFileAsString(path), "persons"));
+		readPersonsFromJson(ManageJsonFile.returnContentOfJSONNodeAsString(
+				ManageJsonFile.returnContentOfFileAsString(path), "persons"));
 	}
 }

@@ -1,4 +1,4 @@
-package com.openclassrooms.P5_SpringBoot_JG;
+package com.openclassrooms.P5_SpringBoot_JG.DTO;
 
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.is;

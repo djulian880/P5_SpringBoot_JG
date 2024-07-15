@@ -1,4 +1,4 @@
-package com.openclassrooms.P5_SpringBoot_JG;
+package com.openclassrooms.P5_SpringBoot_JG.util;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.time.LocalDate;
@@ -9,10 +9,10 @@ import org.skyscreamer.jsonassert.JSONAssert;
 import org.skyscreamer.jsonassert.JSONCompareMode;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import com.openclassrooms.P5_SpringBoot_JG.Util.ManageRepositoriesFromFile;
+import com.openclassrooms.P5_SpringBoot_JG.Util.ManageJsonFile;
 
 @SpringBootTest
-public class ManageRepositoriesFromFileTests {
+public class ManageJsonFileTests {
 
 	@Test
 	void contextLoads() {
@@ -25,7 +25,7 @@ public class ManageRepositoriesFromFileTests {
 		String path="src/test/fileTest.json";
 		String contenuFichier=null;
 		try {
-			contenuFichier=ManageRepositoriesFromFile.returnContentOfFileAsString(path);
+			contenuFichier=ManageJsonFile.returnContentOfFileAsString(path);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -40,7 +40,7 @@ public class ManageRepositoriesFromFileTests {
 		String path="src/test/";
 		String contenuFichier=null;
 		try {
-			contenuFichier=ManageRepositoriesFromFile.returnContentOfFileAsString(path);
+			contenuFichier=ManageJsonFile.returnContentOfFileAsString(path);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			//e.printStackTrace();
@@ -71,7 +71,7 @@ public class ManageRepositoriesFromFileTests {
 		String contenuNoeud=null;
 		
 		 
-		contenuNoeud=ManageRepositoriesFromFile.returnContentOfJSONNodeAsString(filecontent,"persons");
+		contenuNoeud=ManageJsonFile.returnContentOfJSONNodeAsString(filecontent,"persons");
 		
 		try {
 			JSONAssert.assertEquals(contenuNoeud, "[\\n\"\n"

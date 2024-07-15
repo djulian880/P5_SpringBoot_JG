@@ -1,4 +1,4 @@
-package com.openclassrooms.P5_SpringBoot_JG;
+package com.openclassrooms.P5_SpringBoot_JG.repository;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
@@ -15,7 +15,7 @@ import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import com.openclassrooms.P5_SpringBoot_JG.Util.ManageRepositoriesFromFile;
+import com.openclassrooms.P5_SpringBoot_JG.Util.ManageJsonFile;
 import com.openclassrooms.P5_SpringBoot_JG.model.FireStation;
 import com.openclassrooms.P5_SpringBoot_JG.repository.FireStationRepository;
 
@@ -36,8 +36,8 @@ public class FireStationRepositoryTest {
 		mockFireStation.setStation(6);
 		FireStation result = fireStationRepository.add(mockFireStation);
 		assertThat(mockFireStation, is(result));
-		String fileResult = ManageRepositoriesFromFile.returnContentOfJSONNodeAsString(
-				ManageRepositoriesFromFile.returnContentOfFileAsString(path), "firestations");
+		String fileResult = ManageJsonFile.returnContentOfJSONNodeAsString(
+				ManageJsonFile.returnContentOfFileAsString(path), "firestations");
 		assertThat(fileResult, containsString("\"address\":\"10 test Street\",\"station\":6"));
 	}
 
@@ -49,8 +49,8 @@ public class FireStationRepositoryTest {
 		mockFireStation.setStation(8);
 		FireStation result = fireStationRepository.save(mockFireStation);
 		assertThat(mockFireStation, is(result));
-		String fileResult = ManageRepositoriesFromFile.returnContentOfJSONNodeAsString(
-				ManageRepositoriesFromFile.returnContentOfFileAsString(path), "firestations");
+		String fileResult = ManageJsonFile.returnContentOfJSONNodeAsString(
+				ManageJsonFile.returnContentOfFileAsString(path), "firestations");
 		assertThat(fileResult, containsString("\"address\":\"10 test Street\",\"station\":8"));
 	}
 
@@ -61,8 +61,8 @@ public class FireStationRepositoryTest {
 		mockFireStation.setAddress("10 test Street");
 		mockFireStation.setStation(6);
 		fireStationRepository.deleteByAddress("10 test Street");
-		String fileResult = ManageRepositoriesFromFile.returnContentOfJSONNodeAsString(
-				ManageRepositoriesFromFile.returnContentOfFileAsString(path), "firestations");
+		String fileResult = ManageJsonFile.returnContentOfJSONNodeAsString(
+				ManageJsonFile.returnContentOfFileAsString(path), "firestations");
 		assertThat(fileResult, not(containsString("\"address\":\"10 test Street\",\"station\":8")));
 	}
 

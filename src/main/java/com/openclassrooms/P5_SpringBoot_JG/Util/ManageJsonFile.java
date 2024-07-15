@@ -12,16 +12,10 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-
-@Component
 public class ManageJsonFile {
 	
-	@Autowired
- 
-	
-	private static Logger logger = LoggerFactory.getLogger(ManageJsonFile.class);
-	
-	
+ 	private static Logger logger = LoggerFactory.getLogger(ManageJsonFile.class);
+		
 	public static String returnContentOfFileAsString(String filepath) {
 		String content = null;
 		Path filePath = Path.of(filepath);
@@ -47,7 +41,4 @@ public class ManageJsonFile {
 		}
 		return contentOfNode;
 	}
-	
-
-
 }

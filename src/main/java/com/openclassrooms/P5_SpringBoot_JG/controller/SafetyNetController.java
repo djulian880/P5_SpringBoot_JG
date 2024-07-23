@@ -95,8 +95,8 @@ public class SafetyNetController {
 	 *         records
 	 */
 
-	@GetMapping("/")
-	ObjectNode returnPersonsByLastName(@RequestParam(name = "personInfolastName", required = true) String lastName) {
+	@GetMapping("/personInfo")
+	ObjectNode returnPersonsByLastName(@RequestParam(name = "lastName", required = true) String lastName) {
 		logger.debug("Request of data for address by lastName :" + lastName);
 		return safetyNetService.returnPersonsByLastName(lastName);
 	}

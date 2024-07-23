@@ -1,5 +1,6 @@
 package com.openclassrooms.P5_SpringBoot_JG.controller;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
@@ -21,7 +22,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(controllers = PersonController.class)
-@TestInstance(Lifecycle.PER_CLASS)
 public class PersonControllerTest {
 
 	@Autowired
@@ -29,7 +29,8 @@ public class PersonControllerTest {
 
 	@MockBean
 	private PersonService personService;
-
+	
+	@BeforeEach
 	private void setUp() throws Exception {
 		Person mockPerson = new Person();
 		mockPerson.setFirstName("Jacob");
@@ -49,6 +50,7 @@ public class PersonControllerTest {
 
 	@Test
 	public void testPostPerson() throws Exception {
+		Mockito.when(personService.getPerson("Jacob", "Boyd")).thenReturn(null);
 		mockMvc.perform(post("/person").contentType(MediaType.APPLICATION_JSON)
 				.content("{\"address\":\"1509 Culver St\","
 						+ "\"city\":\"Culver\",\"zip\":12345,\"phone\":\"841-111-1111\","
@@ -58,7 +60,6 @@ public class PersonControllerTest {
 
 	@Test
 	public void testPutPerson() throws Exception {
-		setUp();
 		mockMvc.perform(put("/person").contentType(MediaType.APPLICATION_JSON)
 				.content("{\"address\":\"1509 Culver St\","
 						+ "\"city\":\"Culver\",\"zip\":12345,\"phone\":\"841-111-1111\","
@@ -68,7 +69,6 @@ public class PersonControllerTest {
 
 	@Test
 	public void testDeletePerson() throws Exception {
-		setUp();
 		mockMvc.perform(delete("/person").contentType(MediaType.APPLICATION_JSON)
 				.content("{\"address\":\"1509 Culver St\","
 						+ "\"city\":\"Culver\",\"zip\":12345,\"phone\":\"841-111-1111\","
@@ -78,6 +78,7 @@ public class PersonControllerTest {
 	
 	@Test
 	public void testDeletePersonNotFound() throws Exception {
+		Mockito.when(personService.getPerson("Jacob", "Boyd")).thenReturn(null);
 		mockMvc.perform(delete("/person").contentType(MediaType.APPLICATION_JSON)
 				.content("{\"address\":\"1509 Culver St\","
 						+ "\"city\":\"Culver\",\"zip\":12345,\"phone\":\"841-111-1111\","
@@ -87,7 +88,6 @@ public class PersonControllerTest {
 	
 	@Test
 	public void testPostPersonAlreadyExists() throws Exception {
-		setUp();
 		mockMvc.perform(post("/person").contentType(MediaType.APPLICATION_JSON)
 				.content("{\"address\":\"1509 Culver St\","
 						+ "\"city\":\"Culver\",\"zip\":12345,\"phone\":\"841-111-1111\","

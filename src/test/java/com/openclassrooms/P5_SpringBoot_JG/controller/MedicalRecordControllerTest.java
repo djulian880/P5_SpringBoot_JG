@@ -1,8 +1,7 @@
 package com.openclassrooms.P5_SpringBoot_JG.controller;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
-import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -10,7 +9,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
-import com.openclassrooms.P5_SpringBoot_JG.controller.MedicalRecordController;
 import com.openclassrooms.P5_SpringBoot_JG.model.MedicalRecord;
 import com.openclassrooms.P5_SpringBoot_JG.service.MedicalRecordService;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
@@ -25,7 +23,6 @@ import java.util.ArrayList;
 import java.util.Date;
 
 @WebMvcTest(controllers = MedicalRecordController.class)
-@TestInstance(Lifecycle.PER_CLASS)
 
 public class MedicalRecordControllerTest {
 	@Autowired
@@ -34,6 +31,7 @@ public class MedicalRecordControllerTest {
 	@MockBean
 	private MedicalRecordService medicalRecordService;
 
+	@BeforeEach
 	private void setUp() throws Exception {
 		MedicalRecord mockMedicalRecord = new MedicalRecord();
 		SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
@@ -62,6 +60,7 @@ public class MedicalRecordControllerTest {
 
 	@Test
 	public void testPostMedicalRecord() throws Exception {
+		Mockito.when(medicalRecordService.getMedicalRecord("Jacob", "Boyd")).thenReturn(null);
 		mockMvc.perform(post("/medicalRecord").contentType(MediaType.APPLICATION_JSON)
 				.content("{\"firstName\":\"Jacob\",\"lastName\":\"Boyd\",\"birthdate\":\"1989-06-03T23:00:00.000+00:00\","
 						+ "\"medications\":[\"pharmacol:5000mg\",\"terazine:10mg\",\"noznazol:250mg\"],\"allergies\":[]}"))
@@ -70,7 +69,6 @@ public class MedicalRecordControllerTest {
 
 	@Test
 	public void testPutMedicalRecord() throws Exception {
-		setUp();
 		mockMvc.perform(put("/medicalRecord").contentType(MediaType.APPLICATION_JSON)
 				.content("{\"firstName\":\"Jacob\",\"lastName\":\"Boyd\",\"birthdate\":\"1989-06-03T23:00:00.000+00:00\","
 						+ "\"medications\":[\"pharmacol:5000mg\",\"terazine:10mg\",\"noznazol:250mg\"],\"allergies\":[]}"))
@@ -79,7 +77,6 @@ public class MedicalRecordControllerTest {
 
 	@Test
 	public void testDeleteMedicalRecord() throws Exception {
-		setUp();
 		mockMvc.perform(delete("/medicalRecord").contentType(MediaType.APPLICATION_JSON)
 				.content("{\"firstName\":\"Jacob\",\"lastName\":\"Boyd\",\"birthdate\":\"1989-06-03T23:00:00.000+00:00\","
 						+ "\"medications\":[\"pharmacol:5000mg\",\"terazine:10mg\",\"noznazol:250mg\"],\"allergies\":[]}"))
@@ -88,6 +85,7 @@ public class MedicalRecordControllerTest {
 	
 	@Test
 	public void testDeleteMedicalRecordNotFound() throws Exception {
+		Mockito.when(medicalRecordService.getMedicalRecord("Jacob", "Boyd")).thenReturn(null);
 		mockMvc.perform(delete("/medicalRecord").contentType(MediaType.APPLICATION_JSON)
 				.content("{\"firstName\":\"Jacob\",\"lastName\":\"Boyd\",\"birthdate\":\"1989-06-03T23:00:00.000+00:00\","
 						+ "\"medications\":[\"pharmacol:5000mg\",\"terazine:10mg\",\"noznazol:250mg\"],\"allergies\":[]}"))
@@ -97,7 +95,6 @@ public class MedicalRecordControllerTest {
 	
 	@Test
 	public void testPostMedicalRecordAlreadyExists() throws Exception {
-		setUp();
 		mockMvc.perform(post("/medicalRecord").contentType(MediaType.APPLICATION_JSON)
 				.content("{\"firstName\":\"Jacob\",\"lastName\":\"Boyd\",\"birthdate\":\"1989-06-03T23:00:00.000+00:00\","
 						+ "\"medications\":[\"pharmacol:5000mg\",\"terazine:10mg\",\"noznazol:250mg\"],\"allergies\":[]}"))

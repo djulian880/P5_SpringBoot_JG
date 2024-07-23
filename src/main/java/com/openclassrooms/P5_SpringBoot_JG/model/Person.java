@@ -6,8 +6,8 @@ import lombok.Data;
 @Data
 public class Person {
 	
-	private String FirstName;
-	private String LastName;
+	private String firstName;
+	private String lastName;
 	private String address;
 	private String city;
 	private int zip;

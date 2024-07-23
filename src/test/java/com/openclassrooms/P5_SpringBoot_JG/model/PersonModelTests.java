@@ -60,7 +60,7 @@ public class PersonModelTests {
 		person.setFirstName("John");
 		person.setLastName("Doe");
 
-		assertThat(person.toString(), containsString("FirstName=John"));
-		assertThat(person.toString(), containsString("LastName=Doe"));
+		assertThat(person.toString(), containsString("firstName=John"));
+		assertThat(person.toString(), containsString("lastName=Doe"));
 	}
 }

@@ -66,7 +66,7 @@ public class SafetyNetControllerTest {
 
 	@Test
 	public void testEndPointPersonInfo() throws Exception {
-		mockMvc.perform(get("/?personInfolastName=Boyd").contentType(MediaType.APPLICATION_JSON)).andDo(print())
+		mockMvc.perform(get("/personInfo?lastName=Boyd").contentType(MediaType.APPLICATION_JSON)).andDo(print())
 				.andExpect(content().string(containsString("nillacilan")))
 				.andExpect(content().string(containsString("1509 Culver St")))
 				.andExpect(content().string(containsString("peanut"))).andExpect(status().isOk());

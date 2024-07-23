@@ -11,10 +11,6 @@ import lombok.Data;
 @Data
 public class PersonDTO {
 	
-	@Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
-	
 	public String firstName;
 	public String lastName;
 	public Date birthdate;
